@@ -22,8 +22,10 @@ return new class extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
+            $table->string('username')->unique();
             $table->string('avatar')->nullable();
             $table->boolean('is_admin')->default(false);
+            $table->boolean('online')->default(false);
             $table->timestamp('blocked_at')->nullable();
         });
 

@@ -15,4 +15,16 @@ class Groups extends Model
         'owner_id',
         'last_message_id'
     ];
+
+    public function users(){
+        return $this->belongsToMany(User::class, 'groups_users');
+    }
+
+    public function messages(){
+        return $this->hasMany(Messages::class,);
+    }
+
+    public function owner(){
+        return $this->belongsTo(User::class);
+    }
 }

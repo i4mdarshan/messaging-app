@@ -15,4 +15,16 @@ class Chats extends Model
         'receiver_id',
         'last_message_id'
     ];
+
+    public function lastMessage(){
+        return $this->belongsTo(Messages::class, 'last_message_id');
+    }
+    
+    public function sender(){
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function receiver(){
+        return $this->belingsTo(User::class, 'receiver_id');
+    }
 }
