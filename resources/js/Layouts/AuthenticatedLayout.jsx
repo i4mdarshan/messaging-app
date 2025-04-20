@@ -17,7 +17,6 @@ export default function AuthenticatedLayout({ header, children }) {
     ];
 
     useEffect(() => {
-        console.log("Authenticated Layout mounted");
     }, []);
 
     return (
