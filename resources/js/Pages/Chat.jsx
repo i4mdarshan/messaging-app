@@ -285,10 +285,10 @@ export default function Chat() {
     const [selectedChat, setSelectedChat] = useState(chats[0]);
     return (
         <AuthenticatedLayout>
-            <Head title="Chat" />
+            {/* <Head title="Chat" /> */}
 
-            <div className="md:py-12 lg:py-12 xs:py-0 sm:py-0">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="md:py-6 lg:py-6 xs:py-2 sm:py-2">
+                <div className="mx-auto max-w-8xl sm:px-6 lg:px-6">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <Sheet
                             sx={{
@@ -303,7 +303,7 @@ export default function Chat() {
                                 },
                                 height: {
                                     sm: "calc(100dvh - var(--Header-height))",
-                                    md: "100dvh",
+                                    md: "86dvh",
                                 },
                             }}
                         >

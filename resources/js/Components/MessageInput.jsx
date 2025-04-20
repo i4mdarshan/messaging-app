@@ -2,8 +2,7 @@ import React, { useRef } from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
-import Textarea from "@mui/joy/Textarea";
-import { IconButton, Stack } from "@mui/joy";
+import { IconButton, Stack, Textarea } from "@mui/joy";
 
 import FormatBoldRoundedIcon from "@mui/icons-material/FormatBoldRounded";
 import FormatItalicRoundedIcon from "@mui/icons-material/FormatItalicRounded";
@@ -24,7 +23,7 @@ export default function MessageInput({
         }
     };
     return (
-        <Box sx={{ px: 2, pb: 3 }}>
+        <Box sx={{ px: 2, pb: 1 }}>
             <FormControl>
                 <Textarea
                     placeholder="Type something here…"
@@ -34,7 +33,7 @@ export default function MessageInput({
                         setTextAreaValue(event.target.value);
                     }}
                     value={textAreaValue}
-                    minRows={3}
+                    minRows={1}
                     maxRows={10}
                     endDecorator={
                         <Stack
@@ -100,8 +99,24 @@ export default function MessageInput({
                     }}
                     sx={{
                         "& textarea:first-of-type": {
-                            minHeight: 72,
+                            minHeight: 32,
                         },
+                        // Override the native textarea style
+                        "& textarea": {
+                            boxShadow: "none !important",
+                            outline: "none !important",
+                            border: "none !important",
+                        },
+
+                        // Remove ring when focused
+                        "& textarea:focus": {
+                            boxShadow: "none !important",
+                            outline: "none !important",
+                        },
+                        "--Textarea-focusedHighlight": "transparent",
+                        "--Textarea-focusedThickness": "0px",
+                        boxShadow: "none !important",
+                        outline: "none",
                     }}
                 />
             </FormControl>

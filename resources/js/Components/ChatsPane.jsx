@@ -20,7 +20,7 @@ export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
                 borderColor: "divider",
                 height: {
                     sm: "calc(100dvh - var(--Header-height))",
-                    md: "100dvh",
+                    md: "86dvh",
                 },
                 overflowY: "auto",
             }}
@@ -87,6 +87,24 @@ export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
                     startDecorator={<SearchRoundedIcon />}
                     placeholder="Search"
                     aria-label="Search"
+                    sx={{
+                        // Override the native input style
+                        "& input": {
+                            boxShadow: "none !important",
+                            outline: "none !important",
+                            border: "none !important",
+                        },
+
+                        // Remove ring when focused
+                        "& input:focus": {
+                            boxShadow: "none !important",
+                            outline: "none !important",
+                        },
+                        "--Input-focusedHighlight": "transparent",
+                        "--Input-focusedThickness": "0px",
+                        boxShadow: "none !important",
+                        outline: "none",
+                    }}
                 />
             </Box>
             <List
