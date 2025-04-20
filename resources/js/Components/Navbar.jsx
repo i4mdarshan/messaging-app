@@ -7,7 +7,8 @@ import { LogoutOutlined } from "@mui/icons-material";
 import { IconButton, Typography } from "@mui/joy";
 
 export default function Navbar({ navLinks }) {
-    const user = usePage().props.auth.user;
+    const page = usePage();
+    const user = page.props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -136,9 +137,6 @@ export default function Navbar({ navLinks }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route("profile.edit")}>
-                                Profile
-                            </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route("logout")}

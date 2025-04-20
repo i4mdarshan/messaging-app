@@ -2,6 +2,7 @@ import Navbar from "@/Components/Navbar";
 import { CssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/joy/CssBaseline";
 import Box from "@mui/joy/Box";
+import { useEffect } from "react";
 
 export default function AuthenticatedLayout({ header, children }) {
     const navItems = [
@@ -14,6 +15,10 @@ export default function AuthenticatedLayout({ header, children }) {
             label: "Profile",
         },
     ];
+
+    useEffect(() => {
+        console.log("Authenticated Layout mounted");
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100">
