@@ -27,4 +27,25 @@ class Chats extends Model
     public function receiver(){
         return $this->belingsTo(User::class, 'receiver_id');
     }
+
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public static function getChatsForSidebar(User $user)
+    {
+        $users = User::getUsersExceptUser($user);
+        $groups = Groups::getGroupsForUser($user);
+
+        return $users->map(function (User $user){
+            return $user->toChatArray();
+        })->concat($groups->map(function (Groups $group){
+            return $group->toChatArray();
+        }));
+    }
 }

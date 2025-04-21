@@ -11,8 +11,11 @@ import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 
 export default function ChatListItem({
     id,
-    sender,
-    messages,
+    name,
+    username,
+    avatar_url,
+    last_message,
+    last_message_date,
     selectedChatId,
     setSelectedChat,
 }) {
@@ -21,10 +24,10 @@ export default function ChatListItem({
         <React.Fragment>
             <ListItem>
                 <ListItemButton
-                    onClick={() => {
-                        toggleMessagesPane();
-                        setSelectedChat({ id, sender, messages });
-                    }}
+                    // onClick={() => {
+                    //     toggleMessagesPane();
+                    //     setSelectedChat({ id, sender, messages });
+                    // }}
                     selected={selected}
                     color="neutral"
                     sx={{
@@ -35,30 +38,30 @@ export default function ChatListItem({
                 >
                     <Stack direction="row" spacing={1.5}>
                         <AvatarWithStatus
-                            online={sender.online}
-                            src={sender.avatar}
+                            // online={sender.online}
+                            src={avatar_url ? avatar_url : ""}
                         />
                         <Box sx={{ flex: 1 }}>
                             <Typography level="title-sm">
-                                {sender.name}
+                                {name}
                             </Typography>
                             <Typography level="body-sm">
-                                {sender.username}
+                                {username}
                             </Typography>
                         </Box>
                         <Box sx={{ lineHeight: 1.5, textAlign: "right" }}>
-                            {messages[0].unread && (
+                            {/* {messages[0].unread && (
                                 <CircleIcon
                                     sx={{ fontSize: 12 }}
                                     color="primary"
                                 />
-                            )}
+                            )} */}
                             <Typography
                                 level="body-xs"
                                 noWrap
                                 sx={{ display: { xs: "none", md: "block" } }}
                             >
-                                5 mins ago
+                                {last_message_date}
                             </Typography>
                         </Box>
                     </Stack>
@@ -72,7 +75,7 @@ export default function ChatListItem({
                             textOverflow: "ellipsis",
                         }}
                     >
-                        {messages[0].content}
+                        {last_message}
                     </Typography>
                 </ListItemButton>
             </ListItem>

@@ -11,7 +11,7 @@ import ChatListItem from "../Components/ChatListItem";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 
 export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
-    // console.log(selectedChat);
+    // console.log("ChatsPane: ", chats);
 
     return (
         <Sheet
@@ -117,8 +117,13 @@ export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
                 {chats.length > 0 ? (
                     chats.map((chat) => (
                         <ChatListItem
-                            key={chat.id}
-                            {...chat}
+                            key={chat.name}
+                            id={chat.id}
+                            name={chat.name}
+                            username={chat.username}
+                            avatar_url={chat.avatar_url}
+                            last_message={chat.last_message}
+                            last_message_date={chat.last_message_date}
                             setSelectedChat={setSelectedChat}
                             selectedChatId={selectedChatId}
                         />

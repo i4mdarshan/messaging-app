@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
         Messages::factory(1000)->create();
         $messages = Messages::whereNull('groups_id')->orderBy('created_at')->get();
 
+        // last message id for groups is not getting populated
         $chats = $messages->groupBy(function($message){
             return collect([$message->sender_id, $message->receiver_id])
             ->sort()->implode('_');
