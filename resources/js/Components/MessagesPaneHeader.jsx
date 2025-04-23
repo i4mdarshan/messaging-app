@@ -38,13 +38,13 @@ export default function MessagesPaneHeader({ sender }) {
                 >
                     <ArrowBackIosNewRoundedIcon />
                 </IconButton>
-                <Avatar size="lg" src={sender.avatar} />
+                <Avatar size="lg" src={sender?.avatar} />
                 <div>
                     <Typography
                         component="h2"
                         noWrap
                         endDecorator={
-                            sender.online ? (
+                            sender?.online ? (
                                 <Chip
                                     variant="outlined"
                                     size="sm"
@@ -64,9 +64,9 @@ export default function MessagesPaneHeader({ sender }) {
                         }
                         sx={{ fontWeight: "lg", fontSize: "lg" }}
                     >
-                        {sender.name}
+                        {sender?.name}
                     </Typography>
-                    <Typography level="body-sm">{sender.username}</Typography>
+                    <Typography level="body-sm">{sender?.username}</Typography>
                 </div>
             </Stack>
             <Stack spacing={1} direction="row" sx={{ alignItems: "center" }}>

@@ -27,7 +27,7 @@ export default function MessagesPane({ chat }) {
                 backgroundColor: "background.level1",
             }}
         >
-            <MessagesPaneHeader sender={chat.sender} />
+            <MessagesPaneHeader sender={chat?.sender} />
             <Box
                 sx={{
                     display: "flex",
@@ -40,7 +40,7 @@ export default function MessagesPane({ chat }) {
                 }}
             >
                 <Stack spacing={2} sx={{ justifyContent: "flex-end" }}>
-                    {chatMessages.map((message, index) => {
+                    {chatMessages?.map((message, index) => {
                         const isYou = message.sender === "You";
                         return (
                             <Stack
@@ -53,7 +53,7 @@ export default function MessagesPane({ chat }) {
                                         : "row",
                                 }}
                             >
-                                {message.sender !== "You" && (
+                                {message?.sender !== "You" && (
                                     <AvatarWithStatus
                                         online={message.sender.online}
                                         src={message.sender.avatar}

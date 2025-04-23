@@ -2,20 +2,33 @@ import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
 // import { chats } from "@/data/data";
-import { Sheet } from "@mui/joy";
+import { Sheet, useTheme } from "@mui/joy";
 import ChatsPane from "@/Components/ChatsPane";
 import MessagesPane from "@/Components/MessagesPane";
+import { useMediaQuery } from "@mui/material";
+import MessagePaneHelp from "@/Components/MessagePaneHelp";
 
 function Chat() {
     const page = usePage();
+    const theme = useTheme();
     const chats = page.props.chats;
     const [selectedChat, setSelectedChat] = useState([]);
     const [localChats, setLocalChats] = useState([]);
     const [sortedChats, setSortedChats] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState({});
     const isUserOnline = (userId) => onlineUsers[userId];
-    // console.log("chats", chats);
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    // console.log("onlineUsers", onlineUsers);
     // console.log("selected chat", selectedChat);
+
+    const onSearch = (ev) => {
+        const search = ev.target.value.toLowerCase();
+        setLocalChats(
+            chats.filter((chat) => {
+                return chat.name.toLowerCase().includes(search);
+            })
+        );
+    };
 
     useEffect(() => {
         setSortedChats(
@@ -43,6 +56,7 @@ function Chat() {
         return () => {};
     }, [chats]);
 
+    // WebSocket enabler
     useEffect(() => {
         Echo.join("online")
             .here((users) => {
@@ -114,15 +128,31 @@ function Chat() {
                                     zIndex: 100,
                                     width: "100%",
                                     top: 52,
+                                    height: {
+                                        xs: "calc(100dvh - 52px)",
+                                    },
+                                    display: "flex",
+                                    flexDirection: "column",
                                 }}
                             >
                                 <ChatsPane
                                     chats={sortedChats}
                                     selectedChatId={selectedChat.id}
                                     setSelectedChat={setSelectedChat}
+                                    isUserOnline={isUserOnline}
+                                    onSearch={onSearch}
                                 />
                             </Sheet>
-                            {/* <MessagesPane chat={selectedChat} /> */}
+
+                            {isMobile ? (
+                                selectedChat.length > 0 && (
+                                    <MessagesPane chat={[]} />
+                                )
+                            ) : selectedChat.length > 0 ? (
+                                <MessagesPane chat={selectedChat} />
+                            ) : (
+                                <MessagePaneHelp />
+                            )}
                         </Sheet>
                     </div>
                 </div>
@@ -132,7 +162,7 @@ function Chat() {
 }
 
 Chat.layout = (page) => {
-    return <AuthenticatedLayout children={page}></AuthenticatedLayout>;
+    return <AuthenticatedLayout>{page}</AuthenticatedLayout>;
 };
 
 export default Chat;

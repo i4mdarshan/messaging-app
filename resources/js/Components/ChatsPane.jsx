@@ -10,7 +10,13 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ChatListItem from "../Components/ChatListItem";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 
-export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
+export default function ChatsPane({
+    chats,
+    setSelectedChat,
+    selectedChatId,
+    isUserOnline,
+    onSearch,
+}) {
     // console.log("ChatsPane: ", chats);
 
     return (
@@ -22,7 +28,9 @@ export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
                     sm: "calc(100dvh - var(--Header-height))",
                     md: "86dvh",
                 },
-                overflowY: "auto",
+                overflow: "hidden", // Important for controlling internal scroll
+                display: "flex",
+                flexDirection: "column",
             }}
         >
             <Stack
@@ -63,26 +71,15 @@ export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
                     color="neutral"
                     size="sm"
                     sx={{
-                        display: { xs: "none", sm: "unset" },
+                        display: { xs: "block", sm: "unset" },
                     }}
                 >
                     <EditNoteRoundedIcon />
                 </IconButton>
-                <IconButton
-                    variant="plain"
-                    aria-label="edit"
-                    color="neutral"
-                    size="sm"
-                    onClick={() => {
-                        toggleMessagesPane();
-                    }}
-                    sx={{ display: { sm: "none" } }}
-                >
-                    <CloseRoundedIcon />
-                </IconButton>
             </Stack>
             <Box sx={{ px: 2, pb: 1.5 }}>
                 <Input
+                    onKeyUp={onSearch}
                     size="sm"
                     startDecorator={<SearchRoundedIcon />}
                     placeholder="Search"
@@ -107,38 +104,52 @@ export default function ChatsPane({ chats, setSelectedChat, selectedChatId }) {
                     }}
                 />
             </Box>
-            <List
-                sx={{
-                    py: 0,
-                    "--ListItem-paddingY": "0.75rem",
-                    "--ListItem-paddingX": "1rem",
-                }}
-            >
-                {chats.length > 0 ? (
-                    chats.map((chat) => (
-                        <ChatListItem
-                            key={chat.name}
-                            id={chat.id}
-                            name={chat.name}
-                            username={chat.username}
-                            avatar_url={chat.avatar_url}
-                            last_message={chat.last_message}
-                            last_message_date={chat.last_message_date}
-                            setSelectedChat={setSelectedChat}
-                            selectedChatId={selectedChatId}
-                        />
-                    ))
-                ) : (
-                    <Typography
-                        variant="caption"
-                        gutterBottom
-                        sx={{ display: "block" }}
-                        textAlign={"center"}
+            {chats.length > 0 ? (
+                <Box
+                    sx={{
+                        flex:1,
+                        minHeight: 0, // Fill parent container
+                        overflowY: "auto", // Enable scroll
+                        // display: "flex",
+                        // flexDirection: "column",
+                    }}
+                >
+                    <List
+                        sx={{
+                            py: 0,
+                            "--ListItem-paddingY": "0.75rem",
+                            "--ListItem-paddingX": "1rem",
+                        }}
                     >
+                        {chats.map((chat) => (
+                            <ChatListItem
+                                key={`${chat.is_group ? "group_" : "user_"}${
+                                    chat.id
+                                }`}
+                                chat={chat}
+                                setSelectedChat={setSelectedChat}
+                                selectedChatId={selectedChatId}
+                                online={!!isUserOnline(chat.id)}
+                            />
+                        ))}
+                    </List>
+                </Box>
+            ) : (
+                <Box
+                    sx={{
+                        flex: 1,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        px: 2,
+                    }}
+                >
+                    <Typography variant="body-sm" color="text.secondary">
                         No chats available
                     </Typography>
-                )}
-            </List>
+                </Box>
+            )}
         </Sheet>
     );
 }
