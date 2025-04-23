@@ -7,7 +7,7 @@ import ChatBubble from "./ChatBubble";
 import MessageInput from "./MessageInput";
 import MessagesPaneHeader from "./MessagesPaneHeader";
 
-export default function MessagesPane({ chat }) {
+export default function MessagesPane({ chat, setSelectedChat }) {
     const [chatMessages, setChatMessages] = useState(chat.messages);
     const [textAreaValue, setTextAreaValue] = useState("");
 
@@ -27,7 +27,10 @@ export default function MessagesPane({ chat }) {
                 backgroundColor: "background.level1",
             }}
         >
-            <MessagesPaneHeader sender={chat?.sender} />
+            <MessagesPaneHeader
+                sender={chat?.sender}
+                setSelectedChat={setSelectedChat}
+            />
             <Box
                 sx={{
                     display: "flex",

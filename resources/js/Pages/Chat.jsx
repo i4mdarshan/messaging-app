@@ -134,6 +134,11 @@ function Chat() {
                                     display: "flex",
                                     flexDirection: "column",
                                 }}
+                                style={{
+                                    // Apply CSS variable conditionally
+                                    "--MessagesPane-slideIn":
+                                        selectedChat.length > 0 ? 0 : 1,
+                                }}
                             >
                                 <ChatsPane
                                     chats={sortedChats}
@@ -146,10 +151,16 @@ function Chat() {
 
                             {isMobile ? (
                                 selectedChat.length > 0 && (
-                                    <MessagesPane chat={[]} />
+                                    <MessagesPane
+                                        chat={[]}
+                                        setSelectedChat={setSelectedChat}
+                                    />
                                 )
                             ) : selectedChat.length > 0 ? (
-                                <MessagesPane chat={selectedChat} />
+                                <MessagesPane
+                                    chat={selectedChat}
+                                    setSelectedChat={setSelectedChat}
+                                />
                             ) : (
                                 <MessagePaneHelp />
                             )}

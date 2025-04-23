@@ -11,7 +11,7 @@ import PhoneInTalkRoundedIcon from "@mui/icons-material/PhoneInTalkRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 
-export default function MessagesPaneHeader({ sender }) {
+export default function MessagesPaneHeader({ sender, setSelectedChat }) {
     return (
         <Stack
             direction="row"
@@ -34,7 +34,10 @@ export default function MessagesPaneHeader({ sender }) {
                     color="neutral"
                     size="sm"
                     sx={{ display: { xs: "inline-flex", sm: "none" } }}
-                    onClick={() => toggleMessagesPane()}
+                    onClick={() => {
+                        toggleMessagesPane();
+                        setSelectedChat([]);
+                    }}
                 >
                     <ArrowBackIosNewRoundedIcon />
                 </IconButton>
