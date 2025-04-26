@@ -8,8 +8,8 @@ trait BaseApiResponse
     {
         return response()->json([
             'success' => true,
-            'data'    => $data,
-            'status'  => $status,
+            'data' => $data,
+            'status' => $status,
             'message' => $message,
         ], $status);
     }
@@ -18,10 +18,27 @@ trait BaseApiResponse
     {
         return response()->json([
             'success' => false,
-            'data'    => null,
-            'status'  => $status,
+            'data' => null,
+            'status' => $status,
             'message' => $message,
-            'errors'  => $errors,
+            'errors' => $errors,
+        ], $status);
+    }
+
+    protected function paginatedResponse($resource, string $message = 'Success', int $status = 200)
+    {
+        
+        return response()->json([
+            'success' => true,
+            'data' => $resource->items(),
+            'meta' => [
+                'current_page' => $resource->currentPage(),
+                'last_page' => $resource->lastPage(),
+                'per_page' => $resource->perPage(),
+                'total' => $resource->total(),
+            ],
+            'status' => $status,
+            'message' => $message,
         ], $status);
     }
 }

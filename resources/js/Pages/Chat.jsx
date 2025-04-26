@@ -8,7 +8,7 @@ import MessagesPane from "@/Components/MessagesPane";
 import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
 
-function Chat() {
+function Chat({ selectedChats, messages }) {
     const page = usePage();
     const theme = useTheme();
     const chats = page.props.chats;
@@ -20,6 +20,7 @@ function Chat() {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     // console.log("onlineUsers", onlineUsers);
     // console.log("selected chat", selectedChat);
+    // console.log("messages", messages);
 
     const onSearch = (ev) => {
         const search = ev.target.value.toLowerCase();

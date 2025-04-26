@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MessagesController;
 
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
@@ -19,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/chat', function () { return Inertia::render('Chat');})->name('chat');
+    Route::post('/messages', [MessagesController::class, 'loadMessages'])->name('messages.load');
+    Route::post('/messages/older', [MessagesController::class, 'loadOlderMessages'])->name('messages.loadOlder');
 
 });
 

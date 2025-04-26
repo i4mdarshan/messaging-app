@@ -32,4 +32,14 @@ class Messages extends Model
     public function group(){
         return $this->belongsTo(Groups::class);
     }
+
+    public static function loadUserMessages($sender_id,$receiver_id)
+    {
+        $messages = Messages::whereIn('sender_id', [$sender_id, $receiver_id])
+                            ->orWhereIn('receiver_id', [$sender_id, $receiver_id])
+                            ->latest()
+                            ->paginate(10);
+
+        return $messages;
+    }
 }

@@ -10,7 +10,7 @@ import axios from "axios";
 
 // Base axios instance
 const api = axios.create({
-    baseURL: "/api/v1", // Versioned base
+    baseURL: "http://127.0.0.1:8000/", // Versioned base
     withCredentials: true, // required for Sanctum
     headers: {
         "Content-Type": "application/json",
@@ -34,19 +34,19 @@ const middlewareRegistry = {
 // Response interceptor to shape response
 api.interceptors.response.use(
     (res) => ({
-        success: true,
-        data: res.data,
-        status: res.status,
-        message: res.statusText,
+        success: res.data.success,
+        data: res.data.data,
+        status: res.data.status,
+        message: res.data.message,
     }),
     (err) => {
         const res = err.response;
         return Promise.resolve({
             success: false,
             data: null,
-            status: res?.status ?? 500,
-            message: res?.data?.message || "Something went wrong.",
-            errors: res?.data?.errors ?? {},
+            status: res.data.status ?? 500,
+            message: res.data?.message || "Something went wrong.",
+            errors: res.data?.errors ?? {},
         });
     }
 );
@@ -72,10 +72,10 @@ export const apiRequest = async ({
         };
 
         // Apply middlewares conditionally
-        for (const mw of useMiddleware) {
-            const fn = middlewareRegistry[mw];
-            if (fn) config = await fn(config);
-        }
+        // for (const mw of useMiddleware) {
+        //     const fn = middlewareRegistry[mw];
+        //     if (fn) config = await fn(config);
+        // }
 
         const response = await api.request(config);
         return response;
