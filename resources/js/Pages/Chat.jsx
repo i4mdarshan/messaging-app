@@ -7,17 +7,19 @@ import ChatsPane from "@/Components/ChatsPane";
 import MessagesPane from "@/Components/MessagesPane";
 import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
+import { isObjectEmpty } from "@/utils/utils";
 
 function Chat({ selectedChats, messages }) {
     const page = usePage();
     const theme = useTheme();
     const chats = page.props.chats;
-    const [selectedChat, setSelectedChat] = useState([]);
+    const [selectedChat, setSelectedChat] = useState({});
     const [localChats, setLocalChats] = useState([]);
     const [sortedChats, setSortedChats] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState({});
     const isUserOnline = (userId) => onlineUsers[userId];
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const [chatMessages, setChatMessages] = useState([]);
     // console.log("onlineUsers", onlineUsers);
     // console.log("selected chat", selectedChat);
     // console.log("messages", messages);
@@ -137,30 +139,44 @@ function Chat({ selectedChats, messages }) {
                                 }}
                                 style={{
                                     // Apply CSS variable conditionally
-                                    "--MessagesPane-slideIn":
-                                        selectedChat.length > 0 ? 0 : 1,
+                                    "--MessagesPane-slideIn": !isObjectEmpty(
+                                        selectedChat
+                                    )
+                                        ? 0
+                                        : 1,
                                 }}
                             >
                                 <ChatsPane
-                                    chats={sortedChats}
-                                    selectedChatId={selectedChat.id}
+                                    sortedChats={sortedChats}
+                                    selectedChatId={`${
+                                        !isObjectEmpty(selectedChat) &&
+                                        selectedChat.is_group
+                                            ? "group_"
+                                            : "user_"
+                                    }${selectedChat.id}`}
                                     setSelectedChat={setSelectedChat}
                                     isUserOnline={isUserOnline}
                                     onSearch={onSearch}
+                                    chatMessages={chatMessages}
+                                    setChatMessages={setChatMessages}
                                 />
                             </Sheet>
 
                             {isMobile ? (
-                                selectedChat.length > 0 && (
+                                !isObjectEmpty(selectedChat) && (
                                     <MessagesPane
-                                        chat={[]}
+                                        chat={selectedChat}
                                         setSelectedChat={setSelectedChat}
+                                        chatMessages={chatMessages}
+                                        setChatMessages={setChatMessages}
                                     />
                                 )
-                            ) : selectedChat.length > 0 ? (
+                            ) : !isObjectEmpty(selectedChat) ? (
                                 <MessagesPane
                                     chat={selectedChat}
                                     setSelectedChat={setSelectedChat}
+                                    chatMessages={chatMessages}
+                                    setChatMessages={setChatMessages}
                                 />
                             ) : (
                                 <MessagePaneHelp />

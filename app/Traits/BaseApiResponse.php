@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait BaseApiResponse
 {
-    protected function successResponse($data = null, $message = 'Success', $status = 200)
+    protected function successResponse($message = 'Success', $status = 200, $data = [])
     {
         return response()->json([
             'success' => true,
@@ -18,16 +18,27 @@ trait BaseApiResponse
     {
         return response()->json([
             'success' => false,
-            'data' => null,
+            'data' => [],
             'status' => $status,
             'message' => $message,
             'errors' => $errors,
         ], $status);
     }
 
-    protected function paginatedResponse($resource, string $message = 'Success', int $status = 200)
+    protected function validationErrorResponse($message = 'Validation failed', $status = 422, $errors = [])
     {
-        
+        return response()->json([
+            'success' => false,
+            'data' => [],
+            'status' => $status,
+            'message' => $message,
+            'errors' => $errors,
+        ], $status);
+    }
+
+    protected function paginatedResponse($message = 'Success', $status = 200, $resource)
+    {
+
         return response()->json([
             'success' => true,
             'data' => $resource->items(),

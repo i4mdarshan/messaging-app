@@ -17,29 +17,34 @@ class Messages extends Model
         'group_id'
     ];
 
-    public function sender(){
+    public function sender()
+    {
         return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function receiver(){
+    public function receiver()
+    {
         return $this->belingsTo(User::class, 'receiver_id');
     }
 
-    public function attachments(){
-        return $this->hasMany(MessageAttachment::class,);
+    public function attachments()
+    {
+        return $this->hasMany(MessageAttachment::class, );
     }
 
-    public function group(){
+    public function group()
+    {
         return $this->belongsTo(Groups::class);
     }
 
-    public static function loadUserMessages($sender_id,$receiver_id)
+    public static function loadUserMessages($sender_id, $receiver_id)
     {
-        $messages = Messages::whereIn('sender_id', [$sender_id, $receiver_id])
-                            ->orWhereIn('receiver_id', [$sender_id, $receiver_id])
-                            ->latest()
-                            ->paginate(10);
-
+        $messages = Messages::where('sender_id', $sender_id)
+            ->where('receiver_id', $receiver_id)
+            ->orWhere('sender_id', $receiver_id)
+            ->where('receiver_id', $sender_id)
+            ->latest()
+            ->paginate(10);
         return $messages;
     }
 }

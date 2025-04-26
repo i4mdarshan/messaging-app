@@ -6,40 +6,21 @@ import AvatarWithStatus from "./AvatarWithStatus";
 import ChatBubble from "./ChatBubble";
 import MessageInput from "./MessageInput";
 import MessagesPaneHeader from "./MessagesPaneHeader";
-import { apiRequest } from "@/api/api";
 
-export default function MessagesPane({ chat, setSelectedChat }) {
-    const [chatMessages, setChatMessages] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+export default function MessagesPane({
+    chat,
+    setSelectedChat,
+    chatMessages,
+    setChatMessages,
+}) {
+    // const [loading, setLoading] = useState(true);
     const [textAreaValue, setTextAreaValue] = useState("");
 
     // useEffect(() => {
     //     setChatMessages(chat.messages);
     // }, [chat.messages]);
-
-    useEffect(() => {
-        // if (chat.id) {
-        //     fetchMessages(chat.id);
-        // }
-        const userId = 3;
-        fetchMessages(userId);
-    }, []);
-
-    const fetchMessages = async (userId) => {
-        setLoading(true);
-        const response = await apiRequest({
-            method: "POST",
-            url: "/messages",
-            data: { user_id: userId },
-            useMiddleware: ["auth"],
-        });
-
-        if (response.success) {
-            setChatMessages(response.data.messages);
-            setSelectedChat(response.data.selectedChat);
-        }
-        setLoading(false);
-    };
+    // console.log("chat", chat);
 
     return (
         <Sheet

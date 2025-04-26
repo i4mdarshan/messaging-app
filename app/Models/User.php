@@ -48,36 +48,37 @@ class User extends Authenticatable
         ];
     }
 
-    public function groups(){
-        return $this->belongsToMany(Groups::class,'groups_users');
+    public function groups()
+    {
+        return $this->belongsToMany(Groups::class, 'groups_users');
     }
-    
+
     /**
-     * This function is used to return the users based on the 
+     * This function is used to return the users based on the
      * authenticated user and the results are sorted
      * based on the created date of the last message from the users
      *
      * @param User $user The current logged in user
      * @return object
-     * 
+     *
      **/
-    public static function getUsersExceptUser(User $user) : object
+    public static function getUsersExceptUser(User $user): object
     {
         // basically the current logged in user
         $userId = $user->id;
 
         $query = User::select(['users.*', 'messages.message as last_message', 'messages.created_at as last_message_date'])
-        ->where('users.id', '!=', $userId) // remove in future to add own chats 
-        ->leftJoin('chats',function($join) use($userId){
-            $join->on('chats.sender_id','=','users.id')
-                ->where('chats.receiver_id','=',$userId)
-                ->orWhere(function($query) use($userId){
-                    $query->on('chats.receiver_id','=','users.id')
-                        ->where('chats.sender_id','=',$userId);
-                });
-        })
-        ->leftJoin('messages', 'messages.id', '=', 'chats.last_message_id')
-        ->orderBy('messages.created_at','desc');
+            ->where('users.id', '!=', $userId) // remove in future to add own chats
+            ->leftJoin('chats', function ($join) use ($userId) {
+                $join->on('chats.sender_id', '=', 'users.id')
+                    ->where('chats.receiver_id', '=', $userId)
+                    ->orWhere(function ($query) use ($userId) {
+                        $query->on('chats.receiver_id', '=', 'users.id')
+                            ->where('chats.sender_id', '=', $userId);
+                    });
+            })
+            ->leftJoin('messages', 'messages.id', '=', 'chats.last_message_id')
+            ->orderBy('messages.created_at', 'desc');
 
         // dd($query->toSql());
         return $query->get();
@@ -85,8 +86,8 @@ class User extends Authenticatable
 
     /**
      * This function is used to convert the user model response
-     * to the required chats reponse format 
-     * which is used to display user chats on the ChatsPane 
+     * to the required chats reponse format
+     * which is used to display user chats on the ChatsPane
      *
      * @param null
      * @return array
@@ -96,6 +97,7 @@ class User extends Authenticatable
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'username' => $this->username,
             'avatar_url' => $this->avatar,
             'is_group' => false, //since this is single User
             'is_user' => true,

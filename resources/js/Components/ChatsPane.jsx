@@ -11,13 +11,16 @@ import ChatListItem from "../Components/ChatListItem";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 
 export default function ChatsPane({
-    chats,
+    sortedChats,
     setSelectedChat,
     selectedChatId,
+    selectedChatType,
     isUserOnline,
     onSearch,
+    chatMessages,
+    setChatMessages,
 }) {
-    // console.log("ChatsPane: ", chats);
+    // console.log("ChatsPane sortedChats: ", sortedChats);
 
     return (
         <Sheet
@@ -104,10 +107,10 @@ export default function ChatsPane({
                     }}
                 />
             </Box>
-            {chats.length > 0 ? (
+            {sortedChats.length > 0 ? (
                 <Box
                     sx={{
-                        flex:1,
+                        flex: 1,
                         minHeight: 0, // Fill parent container
                         overflowY: "auto", // Enable scroll
                         // display: "flex",
@@ -121,7 +124,7 @@ export default function ChatsPane({
                             "--ListItem-paddingX": "1rem",
                         }}
                     >
-                        {chats.map((chat) => (
+                        {sortedChats.map((chat) => (
                             <ChatListItem
                                 key={`${chat.is_group ? "group_" : "user_"}${
                                     chat.id
@@ -129,7 +132,10 @@ export default function ChatsPane({
                                 chat={chat}
                                 setSelectedChat={setSelectedChat}
                                 selectedChatId={selectedChatId}
+                                selectedChatType={selectedChatType}
                                 online={!!isUserOnline(chat.id)}
+                                chatMessages={chatMessages}
+                                setChatMessages={setChatMessages}
                             />
                         ))}
                     </List>

@@ -7,12 +7,16 @@ import Typography from "@mui/joy/Typography";
 import AvatarWithStatus from "./AvatarWithStatus";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import { formatMessageTimestamp } from "../utils/utils";
+import { apiRequest } from "@/api/api";
 
 export default function ChatListItem({
     chat,
     online,
     selectedChatId,
     setSelectedChat,
+    selectedChatType,
+    chatMessages,
+    setChatMessages,
 }) {
     const {
         id,
@@ -20,10 +24,30 @@ export default function ChatListItem({
         is_user,
         username,
         avatar_url,
+        is_group,
+        is_admin,
+        created_at,
+        updated_at,
+        blocked_at,
         last_message,
         last_message_date,
     } = chat;
-    const selected = selectedChatId === id;
+    const typePrefix = chat.is_group ? "group_" : "user_";
+    const selected = selectedChatId === `${typePrefix}${chat.id}`;
+
+    const fetchMessages = async () => {
+        const response = await apiRequest({
+            method: "POST",
+            url: "/messages",
+            data: { chat_id: id, is_group: is_group, is_user: is_user },
+            useMiddleware: ["auth"],
+        });
+
+        if (response.success) {
+            setChatMessages(response.data.messages);
+            setSelectedChat(response.data.selectedChat);
+        }
+    };
 
     return (
         <React.Fragment>
@@ -41,7 +65,8 @@ export default function ChatListItem({
                     // current set logic is for demo
                     onClick={() => {
                         toggleMessagesPane();
-                        setSelectedChat([1]);
+                        setSelectedChat(chat);
+                        fetchMessages();
                     }}
                 >
                     {/* Avatar */}
