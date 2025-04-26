@@ -48,18 +48,18 @@ export default function ChatsPane({
             >
                 <Typography
                     component="h1"
-                    endDecorator={
-                        <Chip
-                            variant="soft"
-                            color="primary"
-                            size="md"
-                            slotProps={{
-                                root: { component: "span" },
-                            }}
-                        >
-                            4
-                        </Chip>
-                    }
+                    // endDecorator={
+                    //     <Chip
+                    //         variant="soft"
+                    //         color="primary"
+                    //         size="md"
+                    //         slotProps={{
+                    //             root: { component: "span" },
+                    //         }}
+                    //     >
+                    //         4
+                    //     </Chip>
+                    // }
                     sx={{
                         fontSize: { xs: "md", md: "lg" },
                         fontWeight: "lg",

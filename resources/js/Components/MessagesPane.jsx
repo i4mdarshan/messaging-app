@@ -21,7 +21,7 @@ export default function MessagesPane({
     // useEffect(() => {
     //     setChatMessages(chat.messages);
     // }, [chat.messages]);
-    console.log("chatMessages", chatMessages);
+    // console.log("chatMessages", chatMessages);
     // console.log("chat in messagesPane",chat);
 
     return (

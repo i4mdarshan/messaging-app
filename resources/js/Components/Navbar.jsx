@@ -4,7 +4,16 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 import { LogoutOutlined } from "@mui/icons-material";
-import { IconButton, Typography } from "@mui/joy";
+import {
+    Avatar,
+    Divider,
+    Dropdown,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuItem,
+    Typography,
+} from "@mui/joy";
 
 export default function Navbar({ navLinks }) {
     const page = usePage();
@@ -64,86 +73,80 @@ export default function Navbar({ navLinks }) {
                         </div>
 
                         <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
+                            <Dropdown>
+                                <MenuButton
+                                    slots={{ root: Avatar }}
+                                    slotProps={{
+                                        root: {
+                                            size: "md",
+                                            color: "neutral",
+                                            variant: "outlined",
+                                            className:
+                                                "hover:shadow-md transition-shadow duration-200",
+                                        },
+                                    }}
                                 >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? "inline-flex"
-                                                : "hidden"
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? "inline-flex"
-                                                : "hidden"
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                    D
+                                </MenuButton>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? "block" : "hidden") +
-                        " sm:hidden"
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        {navLinks?.map((navLink) => {
-                            return (
-                                <ResponsiveNavLink
-                                    href={route(navLink.name)}
-                                    active={route().current(navLink.name)}
-                                    key={navLink.name}
+                                <Menu
+                                    placement="bottom-end"
+                                    sx={{
+                                        minWidth: 140,
+                                        borderRadius: "12px",
+                                        boxShadow: "var(--joy-shadow-md)",
+                                        padding: "0.5rem",
+                                        zIndex: 1200,
+                                    }}
                                 >
-                                    {navLink.label}
-                                </ResponsiveNavLink>
-                            );
-                        })}
-                    </div>
+                                    <MenuItem
+                                        sx={{
+                                            opacity: 1,
+                                            cursor: "default",
+                                            backgroundColor: "transparent",
+                                            paddingY: "6px", // softer vertical padding
+                                            paddingX: "8px",
+                                            color: "text-gray-800",
+                                            fontWeight: "md",
+                                            fontSize: "md",
+                                        }}
+                                    >
+                                        {"Hi, " + user.name}
+                                    </MenuItem>
 
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
-                        </div>
+                                    <Divider className="my-1" />
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route("logout")}
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
+                                    {navLinks?.map((navLink) => {
+                                        return (
+                                            <MenuItem
+                                                component={ResponsiveNavLink}
+                                                key={
+                                                    "responsive_" + navLink.name
+                                                }
+                                                className="text-xs text-gray-700 hover:bg-gray-100"
+                                                href={route(navLink.name)}
+                                                active={route().current(
+                                                    navLink.name
+                                                )}
+                                            >
+                                                {navLink.label}
+                                            </MenuItem>
+                                        );
+                                    })}
+
+                                    <Divider className="my-1" />
+
+                                    <MenuItem
+                                        color="danger"
+                                        className="text-xs font-medium"
+                                        component={ResponsiveNavLink}
+                                        method="post"
+                                        href={route("logout")}
+                                    >
+                                        Log Out
+                                    </MenuItem>
+                                </Menu>
+                            </Dropdown>
                         </div>
                     </div>
                 </div>
