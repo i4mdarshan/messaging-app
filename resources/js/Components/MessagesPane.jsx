@@ -30,6 +30,7 @@ export default function MessagesPane({
                 height: {
                     sm: "86dvh",
                     md: "86dvh",
+                    xs: "calc(100dvh - var(--Header-height, 64px))",
                 },
                 display: "flex",
                 flexDirection: "column",
@@ -39,6 +40,7 @@ export default function MessagesPane({
             <MessagesPaneHeader
                 sender={chat}
                 setSelectedChat={setSelectedChat}
+                sx={{ flexShrink: 0 }}
             />
             <Box
                 sx={{
@@ -47,7 +49,7 @@ export default function MessagesPane({
                     minHeight: 0,
                     px: 2,
                     py: 3,
-                    overflowY: "scroll",
+                    overflowY: "auto",
                     flexDirection: "column-reverse",
                 }}
             >
@@ -84,6 +86,7 @@ export default function MessagesPane({
             <MessageInput
                 textAreaValue={textAreaValue}
                 setTextAreaValue={setTextAreaValue}
+                sx={{ flexShrink: 0 }}
                 onSubmit={() => {
                     const newId = chatMessages.length + 1;
                     const newIdString = newId.toString();
