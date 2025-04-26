@@ -36,7 +36,7 @@ export default function MessagesPaneHeader({ sender, setSelectedChat }) {
                     sx={{ display: { xs: "inline-flex", sm: "none" } }}
                     onClick={() => {
                         toggleMessagesPane();
-                        setSelectedChat([]);
+                        setSelectedChat({});
                     }}
                 >
                     <ArrowBackIosNewRoundedIcon />

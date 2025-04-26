@@ -28,7 +28,7 @@ export default function MessagesPane({
         <Sheet
             sx={{
                 height: {
-                    sm: "calc(100dvh - var(--Header-height))",
+                    sm: "86dvh",
                     md: "86dvh",
                 },
                 display: "flex",
