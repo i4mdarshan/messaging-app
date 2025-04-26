@@ -47,4 +47,12 @@ class Messages extends Model
             ->paginate(10);
         return $messages;
     }
+
+    public static function loadGroupMessages($group_id)
+    {
+        $messages = Messages::where('groups_id', $group_id)
+            ->latest()
+            ->paginate(10);
+        return $messages;
+    }
 }

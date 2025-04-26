@@ -21,7 +21,7 @@ class MessagesResource extends JsonResource
             'sender_id' => $this->sender_id,
             'receiver_id' => $this->receiver_id,
             'sender' => new UserResource($this->sender),
-            'group_id' => $this->group_id,
+            'group_id' => $this->groups_id,
             'attachments' => [],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at

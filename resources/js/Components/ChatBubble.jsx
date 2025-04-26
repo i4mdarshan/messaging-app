@@ -8,29 +8,47 @@ import Typography from "@mui/joy/Typography";
 import CelebrationOutlinedIcon from "@mui/icons-material/CelebrationOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import InsertDriveFileRoundedIcon from "@mui/icons-material/InsertDriveFileRounded";
+import { formatIsoTime12Hour } from "@/utils/utils";
 
 export default function ChatBubble({
-    content,
+    message,
     variant,
-    timestamp,
+    created_at,
+    group_id,
     attachment = undefined,
     sender,
-}) {    
+    isYou,
+}) {
     const isSent = variant === "sent";
     const [isHovered, setIsHovered] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isCelebrated, setIsCelebrated] = useState(false);
     return (
-        <Box sx={{ maxWidth: "60%", minWidth: "auto" }}>
+        <Box
+            sx={{
+                maxWidth: {
+                    xs: "75%",
+                    md: "60%",
+                },
+                minWidth: "auto",
+            }}
+        >
             <Stack
                 direction="row"
                 spacing={2}
-                sx={{ justifyContent: "space-between", mb: 0.25 }}
+                sx={{ justifyContent: "flex-start", mb: 0.25 }}
             >
-                <Typography level="body-xs">
-                    {sender === "You" ? sender : sender.name}
-                </Typography>
-                <Typography level="body-xs">{timestamp}</Typography>
+                {group_id > 0 ? (
+                    <Typography level="body-xs">
+                        {!isYou ? sender.name : ""}
+                    </Typography>
+                ) : (
+                    ""
+                )}
+
+                {/* <Typography level="body-xs">
+                    {formatIsoTime12Hour(created_at)}
+                </Typography> */}
             </Stack>
             {attachment ? (
                 <Sheet
@@ -80,6 +98,7 @@ export default function ChatBubble({
                             {
                                 p: 1.25,
                                 borderRadius: "lg",
+                                position: "relative",
                             },
                             isSent
                                 ? {
@@ -117,10 +136,26 @@ export default function ChatBubble({
                                       },
                             ]}
                         >
-                            {content}
+                            {message}
+                        </Typography>
+                        <Typography
+                            level="body-xs"
+                            sx={{
+                                position: "absolute",
+                                fontSize: "0.65rem",
+                                color: isSent
+                                    ? "var(--joy-palette-common-white)"
+                                    : "var(--joy-palette-text-secondary)",
+                                alignSelf: "flex-end", // always stick to bottom-right
+                                mt: 0.5,
+                                bottom: 6,
+                                right: 8,
+                            }}
+                        >
+                            {formatIsoTime12Hour(created_at)}{" "}
                         </Typography>
                     </Sheet>
-                    {(isHovered || isLiked || isCelebrated) && (
+                    {/* {(isHovered || isLiked || isCelebrated) && (
                         <Stack
                             direction="row"
                             spacing={0.5}
@@ -158,7 +193,7 @@ export default function ChatBubble({
                                 )}
                             </IconButton>
                         </Stack>
-                    )}
+                    )} */}
                 </Box>
             )}
         </Box>

@@ -69,7 +69,7 @@ export default function MessagesPaneHeader({ sender, setSelectedChat }) {
                     >
                         {sender?.name}
                     </Typography>
-                    <Typography level="body-sm">{sender?.username}</Typography>
+                    <Typography level="body-sm">@{sender?.username}</Typography>
                 </div>
             </Stack>
             <Stack spacing={1} direction="row" sx={{ alignItems: "center" }}>

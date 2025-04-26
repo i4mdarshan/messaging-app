@@ -25,9 +25,10 @@ class MessagesController extends Controller
         return $messages;
     }
 
-    public function loadMessagesByGroup(Groups $group): void
+    public function loadMessagesByGroup(Groups $group)
     {
-        # code...
+        $messages = Messages::loadGroupMessages($group->id);
+        return $messages;
     }
 
     public function loadMessages(Request $request)
@@ -58,16 +59,16 @@ class MessagesController extends Controller
 
         try {
             if ($request->is_user) {
-                $user = User::where('id',$request->chat_id)->first();
+                $user = User::where('id', $request->chat_id)->first();
                 $messages = $this->loadMessagesByUser($user);
                 $selectedChat = $user->toChatArray();
             }
 
-            // if ($request->is_group) {
-            //     $user = User::findOrFail($request->user_id)->first();
-            //     $messages = $this->loadMessagesByUser($user);
-            //     $selectedChat = $user->toChatArray();
-            // }
+            if ($request->is_group) {
+                $group = Groups::findOrFail($request->chat_id)->first();
+                $messages = $this->loadMessagesByGroup($group);
+                $selectedChat = $group->toChatArray();
+            }
 
             $messages_collection = MessagesResource::collection($messages);
             return $this->successResponse("Messages fetched successfully", 200, [

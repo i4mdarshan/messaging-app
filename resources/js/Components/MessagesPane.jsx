@@ -6,7 +6,7 @@ import AvatarWithStatus from "./AvatarWithStatus";
 import ChatBubble from "./ChatBubble";
 import MessageInput from "./MessageInput";
 import MessagesPaneHeader from "./MessagesPaneHeader";
-
+import { usePage } from "@inertiajs/react";
 
 export default function MessagesPane({
     chat,
@@ -14,13 +14,15 @@ export default function MessagesPane({
     chatMessages,
     setChatMessages,
 }) {
+    const page = usePage();
     // const [loading, setLoading] = useState(true);
     const [textAreaValue, setTextAreaValue] = useState("");
-
+    const user = page.props.auth.user;
     // useEffect(() => {
     //     setChatMessages(chat.messages);
     // }, [chat.messages]);
-    // console.log("chat", chat);
+    console.log("chatMessages", chatMessages);
+    // console.log("chat in messagesPane",chat);
 
     return (
         <Sheet
@@ -31,11 +33,11 @@ export default function MessagesPane({
                 },
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "background.level1",
+                backgroundColor: "background.level2",
             }}
         >
             <MessagesPaneHeader
-                sender={chat?.sender}
+                sender={chat}
                 setSelectedChat={setSelectedChat}
             />
             <Box
@@ -51,7 +53,7 @@ export default function MessagesPane({
             >
                 <Stack spacing={2} sx={{ justifyContent: "flex-end" }}>
                     {chatMessages?.map((message, index) => {
-                        const isYou = message.sender === "You";
+                        const isYou = message.sender.id === user.id;
                         return (
                             <Stack
                                 key={index}
@@ -63,7 +65,7 @@ export default function MessagesPane({
                                         : "row",
                                 }}
                             >
-                                {message?.sender !== "You" && (
+                                {message?.sender.id !== user.id && (
                                     <AvatarWithStatus
                                         online={message.sender.online}
                                         src={message.sender.avatar}
@@ -71,6 +73,7 @@ export default function MessagesPane({
                                 )}
                                 <ChatBubble
                                     variant={isYou ? "sent" : "received"}
+                                    isYou={isYou}
                                     {...message}
                                 />
                             </Stack>

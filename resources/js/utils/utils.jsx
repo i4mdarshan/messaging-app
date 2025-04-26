@@ -37,3 +37,12 @@ export function isObjectEmpty(objectName) {
         objectName.constructor === Object
     );
 }
+
+export function formatIsoTime12Hour(isoString) {
+    if (!isoString) return null;
+
+    const date = new Date(isoString);
+    const options = { hour: "2-digit", minute: "2-digit", hour12: true };
+
+    return date.toLocaleTimeString([], options);
+}
