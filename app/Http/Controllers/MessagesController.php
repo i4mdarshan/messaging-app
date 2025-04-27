@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Messages;
 use App\Models\User;
 use App\Models\Groups;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use App\Traits\BaseApiResponse;
@@ -86,9 +87,33 @@ class MessagesController extends Controller
         # code...
     }
 
-    public function store(StoreMessagesRequest $request): void
+    public function sendMessage(Request $request)
     {
-        # code...
+        $validator = Validator::make($request->all(), [
+            'message' => 'nullable|string',
+            'groups_id' => 'required_without:receiver_id|nullable|exists:groups,id',
+            'receiver_id' => 'required_without:groups_id|nullable|exists:users,id',
+        ]);
+
+        // handle validation errors
+        if ($validator->fails()) {
+            return $this->validationErrorResponse("Error while validating data", 422, $validator->errors()->getMessages());
+        }
+
+        try {
+            $message = new Messages();
+            $message->message = $request->message;
+            $message->groups_id = $request->groups_id;
+            $message->receiver_id = $request->receiver_id;
+            $message->sender_id = Auth::user()->id;
+            $message->save();
+
+            return $this->successResponse("Message sent successfully", 200, []);
+
+        } catch (Exception $ex) {
+            return $this->errorResponse("Error sending message", 500, [$ex->getMessage()]);
+        }
+
     }
 
     public function destroy(Messages $message): void

@@ -44,7 +44,11 @@ export default function ChatListItem({
         });
 
         if (response.success) {
-            setChatMessages(response.data.messages);
+            setChatMessages(
+                response.data.messages
+                    ? response.data.messages.reverse()
+                    : chatMessages
+            );
             setSelectedChat(response.data.selectedChat);
         }
     };

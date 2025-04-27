@@ -19,10 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/chat', function () { return Inertia::render('Chat');})->name('chat');
+    Route::get('/chat', function () {
+        return Inertia::render('Chat'); })->name('chat');
+    Route::post('/send-message', [MessagesController::class, 'sendMessage'])->name('messages.send');
     Route::post('/messages', [MessagesController::class, 'loadMessages'])->name('messages.load');
     Route::post('/messages/older', [MessagesController::class, 'loadOlderMessages'])->name('messages.loadOlder');
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -45,10 +45,6 @@ export default function ChatBubble({
                 ) : (
                     ""
                 )}
-
-                {/* <Typography level="body-xs">
-                    {formatIsoTime12Hour(created_at)}
-                </Typography> */}
             </Stack>
             {attachment ? (
                 <Sheet
@@ -98,7 +94,11 @@ export default function ChatBubble({
                             {
                                 p: 1.25,
                                 borderRadius: "lg",
-                                position: "relative",
+                                display: "inline-flex",
+                                alignItems: "flex-end",
+                                gap: "6px",
+                                minWidth: "fit-content",
+                                maxWidth: "100%",
                             },
                             isSent
                                 ? {
@@ -126,19 +126,42 @@ export default function ChatBubble({
                     >
                         <Typography
                             level="body-sm"
-                            sx={[
-                                isSent
-                                    ? {
-                                          color: "var(--joy-palette-common-white)",
-                                      }
-                                    : {
-                                          color: "var(--joy-palette-text-primary)",
-                                      },
-                            ]}
+                            sx={{
+                                color: isSent
+                                    ? "var(--joy-palette-common-white)"
+                                    : "var(--joy-palette-text-primary)",
+                                wordBreak: "break-word",
+                                overflowWrap: "anywhere",
+                            }}
                         >
                             {message}
                         </Typography>
-                        <Typography
+
+                        <Box
+                            sx={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                alignSelf: "flex-end",
+                                gap: "4px",
+                                marginTop: "2px",
+                                flexShrink: 0
+                            }}
+                        >
+                            {/* Time */}
+                            <Typography
+                                level="body-xs"
+                                sx={{
+                                    fontSize: "0.65rem",
+                                    color: isSent
+                                        ? "var(--joy-palette-common-white)"
+                                        : "var(--joy-palette-text-secondary)",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {formatIsoTime12Hour(created_at)}
+                            </Typography>
+                        </Box>
+                        {/* <Typography
                             level="body-xs"
                             sx={{
                                 position: "absolute",
@@ -153,7 +176,7 @@ export default function ChatBubble({
                             }}
                         >
                             {formatIsoTime12Hour(created_at)}{" "}
-                        </Typography>
+                        </Typography> */}
                     </Sheet>
                     {/* {(isHovered || isLiked || isCelebrated) && (
                         <Stack

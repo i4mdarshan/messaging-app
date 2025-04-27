@@ -7,6 +7,7 @@ import ChatBubble from "./ChatBubble";
 import MessageInput from "./MessageInput";
 import MessagesPaneHeader from "./MessagesPaneHeader";
 import { usePage } from "@inertiajs/react";
+import { apiRequest } from "@/api/api";
 
 export default function MessagesPane({
     chat,
@@ -22,7 +23,45 @@ export default function MessagesPane({
     //     setChatMessages(chat.messages);
     // }, [chat.messages]);
     // console.log("chatMessages", chatMessages);
-    // console.log("chat in messagesPane",chat);
+    // console.log("chat in messagesPane", chat);
+
+    const onSendClick = async () => {
+        // const newId = chatMessages.length + 1;
+        // const newIdString = newId.toString();
+        // setChatMessages([
+        //     ...chatMessages,
+        //     {
+        //         id: newIdString,
+        //         sender: "You",
+        //         content: textAreaValue,
+        //         timestamp: "Just now",
+        //     },
+        // ]);
+
+        if (textAreaValue.trim() === "") {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("message", textAreaValue);
+
+        if (chat.is_user) {
+            formData.append("receiver_id", chat.id);
+        } else if (chat.is_group) {
+            formData.append("groups_id", chat.id);
+        }
+
+        const response = await apiRequest({
+            method: "POST",
+            url: "/send-message",
+            data: formData,
+            useMiddleware: ["auth"],
+        });
+
+        if (response.success) {
+            setTextAreaValue("");
+        }
+    };
 
     return (
         <Sheet
@@ -87,19 +126,7 @@ export default function MessagesPane({
                 textAreaValue={textAreaValue}
                 setTextAreaValue={setTextAreaValue}
                 sx={{ flexShrink: 0 }}
-                onSubmit={() => {
-                    const newId = chatMessages.length + 1;
-                    const newIdString = newId.toString();
-                    setChatMessages([
-                        ...chatMessages,
-                        {
-                            id: newIdString,
-                            sender: "You",
-                            content: textAreaValue,
-                            timestamp: "Just now",
-                        },
-                    ]);
-                }}
+                onSubmit={onSendClick}
             />
         </Sheet>
     );

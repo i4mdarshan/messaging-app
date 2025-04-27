@@ -28,10 +28,18 @@ export default function MessageInput({
 }) {
     const textAreaRef = useRef(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
     const handleClick = () => {
         if (textAreaValue.trim() !== "") {
             onSubmit();
             setTextAreaValue("");
+        }
+    };
+
+    const onInputKeyDown = (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            handleClick();
         }
     };
     return (
@@ -122,14 +130,7 @@ export default function MessageInput({
                     value={textAreaValue}
                     minRows={1}
                     maxRows={6}
-                    onKeyDown={(event) => {
-                        if (
-                            event.key === "Enter" &&
-                            (event.metaKey || event.ctrlKey)
-                        ) {
-                            handleClick();
-                        }
-                    }}
+                    onKeyDown={onInputKeyDown}
                     sx={{
                         flex: 1,
                         paddingY: "6px",
@@ -175,6 +176,7 @@ export default function MessageInput({
 
             {/* Send Button */}
             <IconButton
+                disabled={textAreaValue.trim().length > 0 ? false : true}
                 variant="solid"
                 color="primary"
                 size="md"
