@@ -65,7 +65,7 @@ class MessagesController extends Controller
             }
 
             if ($request->is_group) {
-                $group = Groups::findOrFail($request->chat_id)->first();
+                $group = Groups::where('id', $request->chat_id)->first();
                 $messages = $this->loadMessagesByGroup($group);
                 $selectedChat = $group->toChatArray();
             }
