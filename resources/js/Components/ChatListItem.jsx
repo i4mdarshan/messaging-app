@@ -8,6 +8,8 @@ import AvatarWithStatus from "./AvatarWithStatus";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import { formatMessageTimestamp } from "../utils/utils";
 import { apiRequest } from "@/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessages } from "@/store/chats/chatsSlice";
 
 export default function ChatListItem({
     chat,
@@ -15,8 +17,6 @@ export default function ChatListItem({
     selectedChatId,
     setSelectedChat,
     selectedChatType,
-    chatMessages,
-    setChatMessages,
 }) {
     const {
         id,
@@ -29,12 +29,13 @@ export default function ChatListItem({
         created_at,
         updated_at,
         blocked_at,
-        last_message,
-        last_message_date,
     } = chat;
     const typePrefix = chat.is_group ? "group_" : "user_";
     const selected = selectedChatId === `${typePrefix}${chat.id}`;
-
+    const dispatch = useDispatch();
+    const chatMessages = useSelector((state) => state.chat.chatMessages);
+    const last_message = "NA";
+    const last_message_date = "NA";
     const fetchMessages = async () => {
         const response = await apiRequest({
             method: "POST",
@@ -44,11 +45,12 @@ export default function ChatListItem({
         });
 
         if (response.success) {
-            setChatMessages(
-                response.data.messages
-                    ? response.data.messages.reverse()
-                    : chatMessages
-            );
+            // setChatMessages(
+            //     response.data.messages
+            //         ? response.data.messages.reverse()
+            //         : chatMessages
+            // );
+            dispatch(setMessages(response.data.messages.reverse()));
             setSelectedChat(response.data.selectedChat);
         }
     };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/joy/Box";
 import Sheet from "@mui/joy/Sheet";
 import Stack from "@mui/joy/Stack";
@@ -8,35 +8,18 @@ import MessageInput from "./MessageInput";
 import MessagesPaneHeader from "./MessagesPaneHeader";
 import { usePage } from "@inertiajs/react";
 import { apiRequest } from "@/api/api";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function MessagesPane({
-    chat,
-    setSelectedChat,
-    chatMessages,
-    setChatMessages,
-}) {
+export default function MessagesPane({ chat, setSelectedChat }) {
     const page = usePage();
+    const dispatch = useDispatch();
+    const messagesEndRef = useRef(null);
+    const chatMessages = useSelector((state) => state.chat.chatMessages);
     // const [loading, setLoading] = useState(true);
     const [textAreaValue, setTextAreaValue] = useState("");
     const user = page.props.auth.user;
-    // useEffect(() => {
-    //     setChatMessages(chat.messages);
-    // }, [chat.messages]);
-    // console.log("chatMessages", chatMessages);
-    // console.log("chat in messagesPane", chat);
 
     const onSendClick = async () => {
-        // const newId = chatMessages.length + 1;
-        // const newIdString = newId.toString();
-        // setChatMessages([
-        //     ...chatMessages,
-        //     {
-        //         id: newIdString,
-        //         sender: "You",
-        //         content: textAreaValue,
-        //         timestamp: "Just now",
-        //     },
-        // ]);
 
         if (textAreaValue.trim() === "") {
             return;
@@ -60,8 +43,15 @@ export default function MessagesPane({
 
         if (response.success) {
             setTextAreaValue("");
+            dispatch(addMessage(response.data.message));
         }
     };
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [chatMessages]);
 
     return (
         <Sheet
@@ -121,6 +111,7 @@ export default function MessagesPane({
                         );
                     })}
                 </Stack>
+                <div ref={messagesEndRef} />
             </Box>
             <MessageInput
                 textAreaValue={textAreaValue}

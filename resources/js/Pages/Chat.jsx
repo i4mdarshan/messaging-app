@@ -8,10 +8,12 @@ import MessagesPane from "@/Components/MessagesPane";
 import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
 import { isObjectEmpty } from "@/utils/utils";
+import { useDispatch } from "react-redux";
 
 function Chat({ selectedChats, messages }) {
     const page = usePage();
     const theme = useTheme();
+    const dispatch = useDispatch();
     const chats = page.props.chats;
     const [selectedChat, setSelectedChat] = useState({});
     const [localChats, setLocalChats] = useState([]);
@@ -53,6 +55,7 @@ function Chat({ selectedChats, messages }) {
         return () => {};
     }, [localChats]);
 
+    // set localChats
     useEffect(() => {
         setLocalChats(chats);
 

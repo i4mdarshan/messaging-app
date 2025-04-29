@@ -29,8 +29,10 @@
         "@mui/icons-material": "^7.0.2",
         "@mui/joy": "^5.0.0-beta.52",
         "@mui/material": "^7.0.2",
+        "@reduxjs/toolkit": "^2.7.0",
         "emoji-picker-react": "^4.12.2",
         "react-markdown": "^10.1.0",
+        "react-redux": "^9.2.0",
         "react-router-dom": "^6.30.0",
         "uuid": "^11.1.0"
     }
