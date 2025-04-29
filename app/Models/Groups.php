@@ -9,6 +9,10 @@ class Groups extends Model
 {
     use HasFactory;
     //
+
+    protected $guarded = [
+        'id'
+    ];
     protected $fillable = [
         'name',
         'description',
@@ -79,5 +83,21 @@ class Groups extends Model
             'last_message' => $this->last_message,
             'last_message_date' => $this->last_message_date
         ];
+    }
+
+    public static function updateGroupsWithLastMessage($group_id, $message)
+    {
+        $group = Groups::where('groups_id', $group_id)->first();
+
+        if ($group) {
+            $group->update([
+                'last_message_id' => $message->id
+            ]);
+        } else {
+            Groups::create([
+                'id' => $group_id,
+                'last_message_id' => $message->id
+            ]);
+        }
     }
 }

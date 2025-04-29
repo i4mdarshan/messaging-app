@@ -48,16 +48,16 @@ class SocketMessages implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-       $m = $this->message;
-       $channels = [];
-       if ($m->group_id) {
+        $m = $this->message;
+        $channels = [];
+        if ($m->group_id) {
             // channels.php has channel name in this format -> 'messages.group.{groupId}'
-            $channels [] = new PrivateChannel('messages.group.'$m->group_id);
-       }else{
+            $channels[] = new PrivateChannel('messages.group.' . $m->group_id);
+        } else {
             // channels.php has channel name in this format -> 'message.user.{senderId}-{receiverId}'
-            $channels [] = new PrivateChannel('message.user.'.collect($m->sender_id, $m->receiver_id)->sort()->implode('-'));
-       }
+            $channels[] = new PrivateChannel('message.user.' . collect([$m->sender_id, $m->receiver_id])->sort()->implode('-'));
+        }
 
-       return $channels;
+        return $channels;
     }
 }

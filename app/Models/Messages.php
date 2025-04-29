@@ -10,11 +10,15 @@ class Messages extends Model
     use HasFactory;
     //
 
+    protected $guarded = [
+        'id'
+    ];
+
     protected $fillable = [
         'message',
         'sender_id',
         'receiver_id',
-        'group_id'
+        'groups_id'
     ];
 
     public function sender()
@@ -27,10 +31,10 @@ class Messages extends Model
         return $this->belingsTo(User::class, 'receiver_id');
     }
 
-    public function attachments()
-    {
-        return $this->hasMany(MessageAttachment::class, );
-    }
+    // public function attachments()
+    // {
+    //     return $this->hasMany(MessageAttachment::class, );
+    // }
 
     public function group()
     {

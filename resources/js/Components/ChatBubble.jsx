@@ -161,22 +161,6 @@ export default function ChatBubble({
                                 {formatIsoTime12Hour(created_at)}
                             </Typography>
                         </Box>
-                        {/* <Typography
-                            level="body-xs"
-                            sx={{
-                                position: "absolute",
-                                fontSize: "0.65rem",
-                                color: isSent
-                                    ? "var(--joy-palette-common-white)"
-                                    : "var(--joy-palette-text-secondary)",
-                                alignSelf: "flex-end", // always stick to bottom-right
-                                mt: 0.5,
-                                bottom: 6,
-                                right: 8,
-                            }}
-                        >
-                            {formatIsoTime12Hour(created_at)}{" "}
-                        </Typography> */}
                     </Sheet>
                     {/* {(isHovered || isLiked || isCelebrated) && (
                         <Stack

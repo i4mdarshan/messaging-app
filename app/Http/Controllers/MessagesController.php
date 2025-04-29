@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chats;
 use App\Models\Messages;
 use App\Models\User;
 use App\Models\Groups;
 use Auth;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Traits\BaseApiResponse;
 use App\Http\Resources\MessagesResource;
 use App\Http\Requests\StoreMessagesRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Events\SocketMessages;
 
 
 class MessagesController extends Controller
@@ -32,7 +35,7 @@ class MessagesController extends Controller
         return $messages;
     }
 
-    public function loadMessages(Request $request)
+    public function loadMessages(Request $request): JsonResponse
     {
         /**
          * The request will contain chat_id.
@@ -87,28 +90,28 @@ class MessagesController extends Controller
         # code...
     }
 
-    public function sendMessage(Request $request)
+    public function sendMessage(StoreMessagesRequest $request): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'message' => 'nullable|string',
-            'groups_id' => 'required_without:receiver_id|nullable|exists:groups,id',
-            'receiver_id' => 'required_without:groups_id|nullable|exists:users,id',
-        ]);
-
-        // handle validation errors
-        if ($validator->fails()) {
-            return $this->validationErrorResponse("Error while validating data", 422, $validator->errors()->getMessages());
-        }
 
         try {
-            $message = new Messages();
-            $message->message = $request->message;
-            $message->groups_id = $request->groups_id;
-            $message->receiver_id = $request->receiver_id;
-            $message->sender_id = Auth::user()->id;
-            $message->save();
+            $data = $request->validated();
+            $group_id = $data['groups_id'] ?? null;
+            $receiver_id = $data['receiver_id'] ?? null;
+            $data['sender_id'] = Auth::user()->id;
+            $message = Messages::create($data);
+            // Add attachments logic in future
 
-            return $this->successResponse("Message sent successfully", 200, []);
+            if ($group_id) {
+                Groups::updateGroupsWithLastMessage($group_id, $message);
+            }
+
+            if ($receiver_id) {
+                Chats::updateChatsWithLastMessage($receiver_id, Auth::user()->id, $message);
+            }
+
+            SocketMessages::dispatch($message);
+
+            return $this->successResponse("Message sent successfully", 200, new MessagesResource($message));
 
         } catch (Exception $ex) {
             return $this->errorResponse("Error sending message", 500, [$ex->getMessage()]);
@@ -116,8 +119,23 @@ class MessagesController extends Controller
 
     }
 
-    public function destroy(Messages $message): void
+    public function destroy(Messages $message): JsonResponse
     {
-        # code...
+        /**
+         * Create a MessageObserver in future to track and delete all the
+         * attachments associated with the message from storage
+         */
+
+        try {
+            if ($message->sender_id !== Auth::user()->id) {
+                return $this->errorResponse("Access Forbidden", 403, []);
+            }
+
+            $message->delete();
+
+            return $this->successResponse("Message deleted successfully", 204, []);
+        } catch (Exception $ex) {
+            return $this->errorResponse("Error deleting message", 500, [$ex->getMessage()]);
+        }
     }
 }
