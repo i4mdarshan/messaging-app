@@ -14,11 +14,8 @@ export default function ChatsPane({
     sortedChats,
     setSelectedChat,
     selectedChatId,
-    selectedChatType,
     isUserOnline,
     onSearch,
-    chatMessages,
-    setChatMessages,
 }) {
     // console.log("ChatsPane sortedChats: ", sortedChats);
 
@@ -132,10 +129,7 @@ export default function ChatsPane({
                                 chat={chat}
                                 setSelectedChat={setSelectedChat}
                                 selectedChatId={selectedChatId}
-                                selectedChatType={selectedChatType}
                                 online={!!isUserOnline(chat.id)}
-                                chatMessages={chatMessages}
-                                setChatMessages={setChatMessages}
                             />
                         ))}
                     </List>

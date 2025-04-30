@@ -9,14 +9,13 @@ import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import { formatMessageTimestamp } from "../utils/utils";
 import { apiRequest } from "@/api/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "@/store/chats/chatsSlice";
+import { setMessages } from "@/store/messages/messagesSlice";
 
 export default function ChatListItem({
     chat,
     online,
     selectedChatId,
-    setSelectedChat,
-    selectedChatType,
+    setSelectedChat
 }) {
     const {
         id,
@@ -33,7 +32,6 @@ export default function ChatListItem({
     const typePrefix = chat.is_group ? "group_" : "user_";
     const selected = selectedChatId === `${typePrefix}${chat.id}`;
     const dispatch = useDispatch();
-    const chatMessages = useSelector((state) => state.chat.chatMessages);
     const last_message = "NA";
     const last_message_date = "NA";
     const fetchMessages = async () => {

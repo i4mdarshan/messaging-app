@@ -8,13 +8,12 @@ import MessagesPane from "@/Components/MessagesPane";
 import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
 import { isObjectEmpty } from "@/utils/utils";
-import { useDispatch } from "react-redux";
 
-function Chat({ selectedChats, messages }) {
+function Chat() {
     const page = usePage();
     const theme = useTheme();
-    const dispatch = useDispatch();
     const chats = page.props.chats;
+
     const [selectedChat, setSelectedChat] = useState({});
     const [localChats, setLocalChats] = useState([]);
     const [sortedChats, setSortedChats] = useState([]);
@@ -35,6 +34,7 @@ function Chat({ selectedChats, messages }) {
         );
     };
 
+    // sort the local chats to show in the UI
     useEffect(() => {
         setSortedChats(
             localChats.sort((a, b) => {
@@ -170,16 +170,12 @@ function Chat({ selectedChats, messages }) {
                                     <MessagesPane
                                         chat={selectedChat}
                                         setSelectedChat={setSelectedChat}
-                                        chatMessages={chatMessages}
-                                        setChatMessages={setChatMessages}
                                     />
                                 )
                             ) : !isObjectEmpty(selectedChat) ? (
                                 <MessagesPane
                                     chat={selectedChat}
                                     setSelectedChat={setSelectedChat}
-                                    chatMessages={chatMessages}
-                                    setChatMessages={setChatMessages}
                                 />
                             ) : (
                                 <MessagePaneHelp />

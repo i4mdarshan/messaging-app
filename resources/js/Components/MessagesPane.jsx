@@ -13,14 +13,14 @@ import { useDispatch, useSelector } from "react-redux";
 export default function MessagesPane({ chat, setSelectedChat }) {
     const page = usePage();
     const dispatch = useDispatch();
-    const messagesEndRef = useRef(null);
-    const chatMessages = useSelector((state) => state.chat.chatMessages);
+    // const messagesEndRef = useRef(null);
+    const chatMessages = useSelector((state) => state.messages.chatMessages);
     // const [loading, setLoading] = useState(true);
     const [textAreaValue, setTextAreaValue] = useState("");
     const user = page.props.auth.user;
 
+    // handle submit click for sending messages
     const onSendClick = async () => {
-
         if (textAreaValue.trim() === "") {
             return;
         }
@@ -44,14 +44,21 @@ export default function MessagesPane({ chat, setSelectedChat }) {
         if (response.success) {
             setTextAreaValue("");
             dispatch(addMessage(response.data.message));
+
+            // if (messagesEndRef.current) {
+            //     messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+            // }
+
         }
     };
 
-    useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [chatMessages]);
+    // to handle the scroll behaviour when new messages are sent
+    // useEffect(() => {
+    //     if (messagesEndRef.current) {
+    //         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    //     }
+    // }, [chatMessages]);
+    // console.log("chatMessages from redux: ", chatMessages);
 
     return (
         <Sheet
@@ -111,7 +118,7 @@ export default function MessagesPane({ chat, setSelectedChat }) {
                         );
                     })}
                 </Stack>
-                <div ref={messagesEndRef} />
+                {/* <div ref={messagesEndRef} /> */}
             </Box>
             <MessageInput
                 textAreaValue={textAreaValue}
