@@ -9,6 +9,7 @@ import MessagesPaneHeader from "./MessagesPaneHeader";
 import { usePage } from "@inertiajs/react";
 import { apiRequest } from "@/api/api";
 import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from "@/store/messages/messagesSlice";
 
 export default function MessagesPane({ chat, setSelectedChat }) {
     const page = usePage();
@@ -43,7 +44,7 @@ export default function MessagesPane({ chat, setSelectedChat }) {
 
         if (response.success) {
             setTextAreaValue("");
-            dispatch(addMessage(response.data.message));
+            dispatch(addMessage(response.data));
 
             // if (messagesEndRef.current) {
             //     messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
