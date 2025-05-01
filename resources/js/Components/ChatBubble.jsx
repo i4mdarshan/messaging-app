@@ -83,7 +83,8 @@ export default function ChatBubble({
                 </Sheet>
             ) : (
                 <Box
-                    sx={{ position: "relative" }}
+                    sx={{ position: "relative",
+                     }}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                 >
@@ -93,6 +94,7 @@ export default function ChatBubble({
                         sx={[
                             {
                                 p: 1.25,
+                                paddingY:0.75,
                                 borderRadius: "lg",
                                 display: "inline-flex",
                                 alignItems: "flex-end",

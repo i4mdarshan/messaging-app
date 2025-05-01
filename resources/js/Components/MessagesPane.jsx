@@ -110,6 +110,7 @@ export default function MessagesPane({ chat, setSelectedChat }) {
                                     flexDirection: isYou
                                         ? "row-reverse"
                                         : "row",
+                                    marginTop: "6px !important",
                                 }}
                             >
                                 {message?.sender.id !== user.id && (
