@@ -87,7 +87,7 @@ class Groups extends Model
 
     public static function updateGroupsWithLastMessage($group_id, $message)
     {
-        $group = Groups::where('groups_id', $group_id)->first();
+        $group = Groups::where('id', $group_id)->first();
 
         if ($group) {
             $group->update([

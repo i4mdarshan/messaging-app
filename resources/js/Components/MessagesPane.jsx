@@ -10,6 +10,7 @@ import { usePage } from "@inertiajs/react";
 import { apiRequest } from "@/api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "@/store/messages/messagesSlice";
+import { updateLastMessage } from "@/store/chats/chatsSlice";
 
 export default function MessagesPane({ chat, setSelectedChat }) {
     const page = usePage();
@@ -45,11 +46,18 @@ export default function MessagesPane({ chat, setSelectedChat }) {
         if (response.success) {
             setTextAreaValue("");
             dispatch(addMessage(response.data));
+            // TODO
+            // dispatch(
+            //     updateLastMessage({
+            //         chatId: response.data.sender_id,
+            //         lastMessage: response.data.message,
+            //         lastMessageDate: response.data.created_at,
+            //     })
+            // );
 
             // if (messagesEndRef.current) {
             //     messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
             // }
-
         }
     };
 

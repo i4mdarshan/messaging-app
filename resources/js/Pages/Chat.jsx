@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
-// import { chats } from "@/data/data";
 import { Sheet, useTheme } from "@mui/joy";
 import ChatsPane from "@/Components/ChatsPane";
 import MessagesPane from "@/Components/MessagesPane";
 import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
 import { isObjectEmpty } from "@/utils/utils";
+import { useDispatch } from "react-redux";
+import { setChats } from "@/store/chats/chatsSlice";
 
 function Chat() {
     const page = usePage();
     const theme = useTheme();
     const chats = page.props.chats;
-
+    const dispatch = useDispatch();
     const [selectedChat, setSelectedChat] = useState({});
-    const [localChats, setLocalChats] = useState([]);
-    const [sortedChats, setSortedChats] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState({});
     const isUserOnline = (userId) => onlineUsers[userId];
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -24,7 +23,6 @@ function Chat() {
     // console.log("onlineUsers", onlineUsers);
     // console.log("selected chat", selectedChat);
     // console.log("messages", messages);
-
     const onSearch = (ev) => {
         const search = ev.target.value.toLowerCase();
         setLocalChats(
@@ -34,31 +32,9 @@ function Chat() {
         );
     };
 
-    // sort the local chats to show in the UI
+    // dispatch will change since the data will be
     useEffect(() => {
-        setSortedChats(
-            localChats.sort((a, b) => {
-                if (a.last_message_date && b.last_message_date) {
-                    return b.last_message_date.localeCompare(
-                        a.last_message_date
-                    );
-                } else if (a.last_message_date) {
-                    return -1;
-                } else if (b.last_message_date) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            })
-        );
-
-        return () => {};
-    }, [localChats]);
-
-    // set localChats
-    useEffect(() => {
-        setLocalChats(chats);
-
+        dispatch(setChats(chats));
         return () => {};
     }, [chats]);
 
@@ -150,7 +126,7 @@ function Chat() {
                                 }}
                             >
                                 <ChatsPane
-                                    sortedChats={sortedChats}
+                                    // sortedChats={sortedChats}
                                     selectedChatId={`${
                                         !isObjectEmpty(selectedChat) &&
                                         selectedChat.is_group

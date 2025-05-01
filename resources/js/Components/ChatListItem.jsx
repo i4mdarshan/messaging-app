@@ -28,12 +28,15 @@ export default function ChatListItem({
         created_at,
         updated_at,
         blocked_at,
+        last_message,
+        last_message_date
+
     } = chat;
     const typePrefix = chat.is_group ? "group_" : "user_";
     const selected = selectedChatId === `${typePrefix}${chat.id}`;
     const dispatch = useDispatch();
-    const last_message = "NA";
-    const last_message_date = "NA";
+    // const last_message = "NA";
+    // const last_message_date = "NA";
     const fetchMessages = async () => {
         const response = await apiRequest({
             method: "POST",

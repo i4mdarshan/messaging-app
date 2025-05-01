@@ -1,3 +1,9 @@
+const TWELVE_HOUR_DATE_OPTIONS = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+};
+
 export function formatMessageTimestamp(dateString) {
     const inputDate = new Date(dateString);
     const now = new Date();
@@ -14,11 +20,7 @@ export function formatMessageTimestamp(dateString) {
 
     if (dayDiff === 0) {
         // Today → show time
-        return inputDate.toLocaleTimeString([], {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-        });
+        return inputDate.toLocaleTimeString([], TWELVE_HOUR_DATE_OPTIONS);
     } else if (dayDiff === 1) {
         return "Yesterday";
     } else if (dayDiff <= 6) {
@@ -42,7 +44,6 @@ export function formatIsoTime12Hour(isoString) {
     if (!isoString) return null;
 
     const date = new Date(isoString);
-    const options = { hour: "2-digit", minute: "2-digit", hour12: true };
 
-    return date.toLocaleTimeString([], options);
+    return date.toLocaleTimeString([], TWELVE_HOUR_DATE_OPTIONS);
 }

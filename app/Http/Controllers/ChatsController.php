@@ -15,8 +15,10 @@ class ChatsController extends Controller
      * @return type
      * @throws conditon
      **/
-    // public static function (Type $var = null17)
-    // {
+    public static function loadChats()
+    {
+        // 'chats' => Auth::id() ? Chats::getChatsForSidebar(Auth::user()) : [],
 
-    // }
+        return;
+    }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/joy/Stack";
 import Sheet from "@mui/joy/Sheet";
 import Typography from "@mui/joy/Typography";
@@ -9,15 +9,50 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ChatListItem from "../Components/ChatListItem";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
+import { useDispatch, useSelector } from "react-redux";
+import { setChats } from "@/store/chats/chatsSlice";
 
 export default function ChatsPane({
-    sortedChats,
+    // sortedChats,
     setSelectedChat,
     selectedChatId,
     isUserOnline,
     onSearch,
 }) {
     // console.log("ChatsPane sortedChats: ", sortedChats);
+    const dispatch = useDispatch();
+    const chats = useSelector((state) => state.chats.chats);
+    const [localChats, setLocalChats] = useState([]);
+    const [sortedChats, setSortedChats] = useState([]);
+    // console.log("chats from pane: ", localChats);
+
+    // sort the local chats to show in the UI
+    useEffect(() => {
+        if (!Array.isArray(localChats) || localChats.length === 0) {
+            setSortedChats([]);
+            return;
+        }
+
+        const sorted = [...localChats].sort((a, b) => {
+            if (a.last_message_date && b.last_message_date) {
+                return b.last_message_date.localeCompare(a.last_message_date);
+            } else if (a.last_message_date) {
+                return -1;
+            } else if (b.last_message_date) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        setSortedChats(sorted);
+    }, [localChats]);
+
+    // set localChats
+    useEffect(() => {
+        setLocalChats(chats);
+        return () => {};
+    }, [chats]);
 
     return (
         <Sheet
