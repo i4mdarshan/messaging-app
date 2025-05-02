@@ -11,11 +11,16 @@ import PhoneInTalkRoundedIcon from "@mui/icons-material/PhoneInTalkRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import AvatarWithStatus from "./AvatarWithStatus";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearSelectedChat } from "@/store/chats/chatsSlice";
 
-export default function MessagesPaneHeader({ sender }) {
+export default function MessagesPaneHeader() {
     const dispatch = useDispatch();
+    const sender = useSelector((state) => state.chats.selectedChat);
+    const handleBackButton = () => {
+        dispatch(clearSelectedChat());
+        toggleMessagesPane();
+    };
 
     return (
         <Stack
@@ -38,11 +43,17 @@ export default function MessagesPaneHeader({ sender }) {
                     variant="plain"
                     color="neutral"
                     size="sm"
-                    sx={{ display: { xs: "inline-flex", sm: "none" } }}
-                    onClick={() => {
-                        toggleMessagesPane();
-                        dispatch(clearSelectedChat());
+                    sx={{
+                        display: { xs: "inline-flex", sm: "none" },
+                        transition: "background-color 0.2s ease",
+                        "&:hover": {
+                            backgroundColor: "transparent",
+                        },
+                        "&:active": {
+                            backgroundColor: "transparent",
+                        },
                     }}
+                    onClick={handleBackButton}
                 >
                     <ArrowBackIosNewRoundedIcon />
                 </IconButton>

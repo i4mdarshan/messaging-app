@@ -12,9 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "@/store/messages/messagesSlice";
 import { updateLastMessage } from "@/store/chats/chatsSlice";
 
-export default function MessagesPane({ chat }) {
+export default function MessagesPane() {
     const page = usePage();
     const dispatch = useDispatch();
+    const chat = useSelector((state) => state.chats.selectedChat);
     // const messagesEndRef = useRef(null);
     const chatMessages = useSelector((state) => state.messages.chatMessages);
     // const [loading, setLoading] = useState(true);
@@ -82,10 +83,7 @@ export default function MessagesPane({ chat }) {
                 backgroundColor: "background.level2",
             }}
         >
-            <MessagesPaneHeader
-                sender={chat}
-                sx={{ flexShrink: 0 }}
-            />
+            <MessagesPaneHeader sx={{ flexShrink: 0 }} />
             <Box
                 sx={{
                     display: "flex",

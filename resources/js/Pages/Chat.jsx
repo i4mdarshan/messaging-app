@@ -20,15 +20,6 @@ function Chat() {
     const isUserOnline = (userId) => onlineUsers[userId];
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const onSearch = (ev) => {
-        const search = ev.target.value.toLowerCase();
-        setLocalChats(
-            chats.filter((chat) => {
-                return chat.name.toLowerCase().includes(search);
-            })
-        );
-    };
-
     // dispatch will change since the data will be
     useEffect(() => {
         dispatch(setChats(chats));
@@ -131,16 +122,13 @@ function Chat() {
                                             : "user_"
                                     }${selectedChat.id}`}
                                     isUserOnline={isUserOnline}
-                                    onSearch={onSearch}
                                 />
                             </Sheet>
 
                             {isMobile ? (
-                                !isObjectEmpty(selectedChat) && (
-                                    <MessagesPane chat={selectedChat} />
-                                )
+                                !isObjectEmpty(selectedChat) && <MessagesPane />
                             ) : !isObjectEmpty(selectedChat) ? (
-                                <MessagesPane chat={selectedChat} />
+                                <MessagesPane />
                             ) : (
                                 <MessagePaneHelp />
                             )}

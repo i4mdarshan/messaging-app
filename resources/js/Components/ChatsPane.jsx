@@ -12,13 +12,22 @@ import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import { useDispatch, useSelector } from "react-redux";
 import { setChats } from "@/store/chats/chatsSlice";
 
-export default function ChatsPane({ selectedChatId, isUserOnline, onSearch }) {
+export default function ChatsPane({ selectedChatId, isUserOnline}) {
     // console.log("ChatsPane sortedChats: ", sortedChats);
     const dispatch = useDispatch();
     const chats = useSelector((state) => state.chats.chats);
     const [localChats, setLocalChats] = useState([]);
     const [sortedChats, setSortedChats] = useState([]);
     // console.log("chats from pane: ", localChats);
+
+    const onSearch = (ev) => {
+        const search = ev.target.value.toLowerCase();
+        setLocalChats(
+            chats.filter((chat) => {
+                return chat.name.toLowerCase().includes(search);
+            })
+        );
+    };
 
     // sort the local chats to show in the UI
     useEffect(() => {
