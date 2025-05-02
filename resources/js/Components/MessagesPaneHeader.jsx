@@ -10,6 +10,7 @@ import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRound
 import PhoneInTalkRoundedIcon from "@mui/icons-material/PhoneInTalkRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
+import AvatarWithStatus from "./AvatarWithStatus";
 
 export default function MessagesPaneHeader({ sender, setSelectedChat }) {
     return (
@@ -41,7 +42,13 @@ export default function MessagesPaneHeader({ sender, setSelectedChat }) {
                 >
                     <ArrowBackIosNewRoundedIcon />
                 </IconButton>
-                <Avatar size="lg" src={sender?.avatar} />
+                {/* Avatar */}
+                <AvatarWithStatus
+                    is_user={sender?.is_user}
+                    online={false}
+                    avatar_url={sender?.avatar_url}
+                    size={"lg"}
+                />
                 <div>
                     <Typography
                         component="h2"
@@ -69,7 +76,7 @@ export default function MessagesPaneHeader({ sender, setSelectedChat }) {
                     >
                         {sender?.name}
                     </Typography>
-                    <Typography level="body-sm">@{sender?.username}</Typography>
+                    {sender.is_user && <Typography level="body-sm">@{sender?.username}</Typography>}
                 </div>
             </Stack>
             <Stack spacing={1} direction="row" sx={{ alignItems: "center" }}>
