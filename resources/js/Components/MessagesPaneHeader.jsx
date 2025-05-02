@@ -11,8 +11,12 @@ import PhoneInTalkRoundedIcon from "@mui/icons-material/PhoneInTalkRounded";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import AvatarWithStatus from "./AvatarWithStatus";
+import { useDispatch } from "react-redux";
+import { clearSelectedChat } from "@/store/chats/chatsSlice";
 
-export default function MessagesPaneHeader({ sender, setSelectedChat }) {
+export default function MessagesPaneHeader({ sender }) {
+    const dispatch = useDispatch();
+
     return (
         <Stack
             direction="row"
@@ -37,7 +41,7 @@ export default function MessagesPaneHeader({ sender, setSelectedChat }) {
                     sx={{ display: { xs: "inline-flex", sm: "none" } }}
                     onClick={() => {
                         toggleMessagesPane();
-                        setSelectedChat({});
+                        dispatch(clearSelectedChat());
                     }}
                 >
                     <ArrowBackIosNewRoundedIcon />
@@ -76,7 +80,11 @@ export default function MessagesPaneHeader({ sender, setSelectedChat }) {
                     >
                         {sender?.name}
                     </Typography>
-                    {sender.is_user && <Typography level="body-sm">@{sender?.username}</Typography>}
+                    {sender.is_user && (
+                        <Typography level="body-sm">
+                            @{sender?.username}
+                        </Typography>
+                    )}
                 </div>
             </Stack>
             <Stack spacing={1} direction="row" sx={{ alignItems: "center" }}>

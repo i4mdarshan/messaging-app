@@ -27,9 +27,18 @@ const chatsSlice = createSlice({
         selectChat: (state, action) => {
             state.selectedChat = action.payload;
         },
+        clearSelectedChat: (state) => {
+            state.selectedChat = {};
+        },
     },
 });
 
-export const { setChats, addChat, clearChats, updateLastMessage, selectChat } =
-    chatsSlice.actions;
+export const {
+    setChats,
+    addChat,
+    clearChats,
+    updateLastMessage,
+    selectChat,
+    clearSelectedChat,
+} = chatsSlice.actions;
 export default chatsSlice.reducer;
