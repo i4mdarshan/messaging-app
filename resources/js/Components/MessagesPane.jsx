@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "@/store/messages/messagesSlice";
 import { updateLastMessage } from "@/store/chats/chatsSlice";
 
-export default function MessagesPane({ chat, setSelectedChat }) {
+export default function MessagesPane({ chat }) {
     const page = usePage();
     const dispatch = useDispatch();
     // const messagesEndRef = useRef(null);
@@ -84,7 +84,6 @@ export default function MessagesPane({ chat, setSelectedChat }) {
         >
             <MessagesPaneHeader
                 sender={chat}
-                setSelectedChat={setSelectedChat}
                 sx={{ flexShrink: 0 }}
             />
             <Box

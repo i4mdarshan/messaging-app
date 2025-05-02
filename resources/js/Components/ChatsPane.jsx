@@ -12,13 +12,7 @@ import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
 import { useDispatch, useSelector } from "react-redux";
 import { setChats } from "@/store/chats/chatsSlice";
 
-export default function ChatsPane({
-    // sortedChats,
-    setSelectedChat,
-    selectedChatId,
-    isUserOnline,
-    onSearch,
-}) {
+export default function ChatsPane({ selectedChatId, isUserOnline, onSearch }) {
     // console.log("ChatsPane sortedChats: ", sortedChats);
     const dispatch = useDispatch();
     const chats = useSelector((state) => state.chats.chats);
@@ -162,7 +156,6 @@ export default function ChatsPane({
                                     chat.id
                                 }`}
                                 chat={chat}
-                                setSelectedChat={setSelectedChat}
                                 selectedChatId={selectedChatId}
                                 online={!!isUserOnline(chat.id)}
                             />

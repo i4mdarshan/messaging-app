@@ -7,7 +7,7 @@ import MessagesPane from "@/Components/MessagesPane";
 import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
 import { isObjectEmpty } from "@/utils/utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setChats } from "@/store/chats/chatsSlice";
 
 function Chat() {
@@ -15,14 +15,11 @@ function Chat() {
     const theme = useTheme();
     const chats = page.props.chats;
     const dispatch = useDispatch();
-    const [selectedChat, setSelectedChat] = useState({});
+    const selectedChat = useSelector((state) => state.chats.selectedChat);
     const [onlineUsers, setOnlineUsers] = useState({});
     const isUserOnline = (userId) => onlineUsers[userId];
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    const [chatMessages, setChatMessages] = useState([]);
-    // console.log("onlineUsers", onlineUsers);
-    // console.log("selected chat", selectedChat);
-    // console.log("messages", messages);
+
     const onSearch = (ev) => {
         const search = ev.target.value.toLowerCase();
         setLocalChats(
@@ -126,33 +123,24 @@ function Chat() {
                                 }}
                             >
                                 <ChatsPane
-                                    // sortedChats={sortedChats}
+                                    // below prop is used only for UI purpose
                                     selectedChatId={`${
                                         !isObjectEmpty(selectedChat) &&
                                         selectedChat.is_group
                                             ? "group_"
                                             : "user_"
                                     }${selectedChat.id}`}
-                                    setSelectedChat={setSelectedChat}
                                     isUserOnline={isUserOnline}
                                     onSearch={onSearch}
-                                    chatMessages={chatMessages}
-                                    setChatMessages={setChatMessages}
                                 />
                             </Sheet>
 
                             {isMobile ? (
                                 !isObjectEmpty(selectedChat) && (
-                                    <MessagesPane
-                                        chat={selectedChat}
-                                        setSelectedChat={setSelectedChat}
-                                    />
+                                    <MessagesPane chat={selectedChat} />
                                 )
                             ) : !isObjectEmpty(selectedChat) ? (
-                                <MessagesPane
-                                    chat={selectedChat}
-                                    setSelectedChat={setSelectedChat}
-                                />
+                                <MessagesPane chat={selectedChat} />
                             ) : (
                                 <MessagePaneHelp />
                             )}
