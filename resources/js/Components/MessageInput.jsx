@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import FormControl from "@mui/joy/FormControl";
@@ -24,6 +24,7 @@ import { apiRequest } from "@/api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { addMessage } from "@/store/messages/messagesSlice";
 import { updateLastMessage } from "@/store/chats/chatsSlice";
+import { addEvent } from "@/store/events/eventsSlice";
 
 export default function MessageInput() {
     const textAreaRef = useRef(null);
@@ -85,6 +86,34 @@ export default function MessageInput() {
             handleClick();
         }
     };
+
+    // const messageCreated = (message) => {
+    //     if (chat && chat.is_group && chat.id === message.groups_id) {
+    //         dispatch(addMessage(message));
+    //     }
+
+    //     if (
+    //         chat &&
+    //         chat.is_user &&
+    //         (chat.id == message.sender_id || chat.id == message.receiver_id)
+    //     ) {
+    //         dispatch(addMessage(message));
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     let addEventData = {
+    //         name: "message.created",
+    //         cb: messageCreated,
+    //     };
+
+    //     dispatch(addEvent(addEventData));
+
+    //     return () => {
+    //         // offCreated();
+    //     };
+    // }, [chat]);
+
     return (
         <Sheet
             variant="soft"

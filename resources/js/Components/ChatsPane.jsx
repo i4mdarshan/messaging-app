@@ -57,61 +57,6 @@ export default function ChatsPane({ selectedChatId, isUserOnline }) {
         return () => {};
     }, [chats]);
 
-    // create channels for messaging and emit messages
-    useEffect(() => {
-        chats.forEach((chat) => {
-            let channel = `messages.group.${chat.id}`;
-
-            if (chat.is_user) {
-                channel = `messages.user.${[
-                    parseInt(user.id),
-                    parseInt(chat.id),
-                ]
-                    .sort((a, b) => a - b)
-                    .join("-")}`;
-            }
-            // console.log("channel: ", channel);
-
-            Echo.private(channel)
-                .error((error) => {
-                    console.log(error);
-                })
-                .listen(".SocketMessages", (event) => {
-                    console.log("SocketMessages: ", event);
-                    // const message = event.message;
-                    // emit("message.created", message);
-
-                    // if (message.sender_id === user.id) {
-                    //     return;
-                    // }
-
-                    // emit("newMessageNotification", {
-                    //     user: message.sender,
-                    //     groups_id: message.groups_id,
-                    //     message: message.message,
-                    // });
-                });
-        });
-
-        // cleanup of channels
-        return () => {
-            chats.forEach((chat) => {
-                let channel = `messages.group.${chat.id}`;
-
-                if (chat.is_user) {
-                    channel = `messages.user.${[
-                        parseInt(user.id),
-                        parseInt(chat.id),
-                    ]
-                        .sort((a, b) => a - b)
-                        .join("-")}`;
-                }
-
-                Echo.leave(channel);
-            });
-        };
-    }, [chats]);
-
     return (
         <Sheet
             sx={{

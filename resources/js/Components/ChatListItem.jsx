@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect } from "react";
 import Box from "@mui/joy/Box";
 import ListDivider from "@mui/joy/ListDivider";
 import ListItem from "@mui/joy/ListItem";
@@ -11,8 +11,10 @@ import { apiRequest } from "@/api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "@/store/messages/messagesSlice";
 import { selectChat } from "@/store/chats/chatsSlice";
+import { addEvent } from "@/store/events/eventsSlice";
 
 export default function ChatListItem({ chat, online, selectedChatId }) {
+    const dispatch = useDispatch();
     const {
         id,
         name,
@@ -27,9 +29,9 @@ export default function ChatListItem({ chat, online, selectedChatId }) {
         last_message,
         last_message_date,
     } = chat;
+    const selectedChat = useSelector((state) => state.chats.selectedChat);
     const typePrefix = chat.is_group ? "group_" : "user_";
     const selected = selectedChatId === `${typePrefix}${chat.id}`;
-    const dispatch = useDispatch();
     const fetchMessages = async () => {
         const response = await apiRequest({
             method: "POST",
@@ -44,8 +46,14 @@ export default function ChatListItem({ chat, online, selectedChatId }) {
         }
     };
 
+    const selectHandler = () => {
+        toggleMessagesPane();
+        dispatch(selectChat(chat));
+        fetchMessages();
+    };
+
     return (
-        <React.Fragment>
+        <>
             <ListItem>
                 <ListItemButton
                     selected={selected}
@@ -56,11 +64,7 @@ export default function ChatListItem({ chat, online, selectedChatId }) {
                         gap: 1.5,
                         py: 1.5,
                     }}
-                    onClick={() => {
-                        toggleMessagesPane();
-                        dispatch(selectChat(chat));
-                        fetchMessages();
-                    }}
+                    onClick={selectHandler}
                 >
                     {/* Avatar */}
                     <AvatarWithStatus
@@ -118,6 +122,6 @@ export default function ChatListItem({ chat, online, selectedChatId }) {
                 </ListItemButton>
             </ListItem>
             <ListDivider sx={{ margin: 0 }} />
-        </React.Fragment>
+        </>
     );
 }

@@ -8,7 +8,9 @@ import { useMediaQuery } from "@mui/material";
 import MessagePaneHelp from "@/Components/MessagePaneHelp";
 import { isObjectEmpty } from "@/utils/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { setChats } from "@/store/chats/chatsSlice";
+import { setChats, updateLastMessage } from "@/store/chats/chatsSlice";
+import { addEvent, emitEvent } from "@/store/events/eventsSlice";
+import { addMessage } from "@/store/messages/messagesSlice";
 
 function Chat() {
     const page = usePage();
@@ -86,17 +88,13 @@ function Chat() {
                 .listen("SocketMessages", (event) => {
                     // console.log("SocketMessages: ", event);
                     const message = event.message;
-                    emit("message.created", message);
 
-                    if (message.sender_id === user.id) {
-                        return;
-                    }
+                    // if (message.sender_id === user.id) {
+                    //     return;
+                    // }
 
-                    emit("newMessageNotification", {
-                        user: message.sender,
-                        groups_id: message.groups_id,
-                        message: message.message,
-                    });
+                    // dispatch(addMessage(message));
+
                 });
         });
 
