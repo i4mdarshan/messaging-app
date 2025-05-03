@@ -17,8 +17,11 @@ const chatsSlice = createSlice({
             state.chats = [];
         },
         updateLastMessage: (state, action) => {
-            const { chatId, lastMessage, lastMessageDate } = action.payload;
-            const chat = state.chats.find((c) => c.id === chatId);
+            const { receiverId, lastMessage, lastMessageDate, groupId } =
+                action.payload;
+            const chat = state.chats.find(
+                (c) => c.id === parseInt(receiverId) || (c.id === parseInt(groupId) && c.is_group === !!groupId)
+            );
             if (chat) {
                 chat.last_message = lastMessage;
                 chat.last_message_date = lastMessageDate;

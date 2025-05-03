@@ -14,6 +14,7 @@ function Chat() {
     const page = usePage();
     const theme = useTheme();
     const chats = page.props.chats;
+    const user = page.props.auth.user;
     const dispatch = useDispatch();
     const selectedChat = useSelector((state) => state.chats.selectedChat);
     const [onlineUsers, setOnlineUsers] = useState({});
@@ -62,6 +63,61 @@ function Chat() {
             Echo.leave("online");
         };
     }, []);
+
+    // create channels for messaging and emit messages
+    useEffect(() => {
+        chats.forEach((chat) => {
+            let channel = `messages.group.${chat.id}`;
+
+            if (chat.is_user) {
+                channel = `messages.user.${[
+                    parseInt(user.id),
+                    parseInt(chat.id),
+                ]
+                    .sort((a, b) => a - b)
+                    .join("-")}`;
+            }
+            // console.log("channel: ", channel);
+
+            Echo.private(channel)
+                .error((error) => {
+                    console.log(error);
+                })
+                .listen("SocketMessages", (event) => {
+                    // console.log("SocketMessages: ", event);
+                    const message = event.message;
+                    emit("message.created", message);
+
+                    if (message.sender_id === user.id) {
+                        return;
+                    }
+
+                    emit("newMessageNotification", {
+                        user: message.sender,
+                        groups_id: message.groups_id,
+                        message: message.message,
+                    });
+                });
+        });
+
+        // cleanup of channels
+        return () => {
+            chats.forEach((chat) => {
+                let channel = `messages.group.${chat.id}`;
+
+                if (chat.is_user) {
+                    channel = `messages.user.${[
+                        parseInt(user.id),
+                        parseInt(chat.id),
+                    ]
+                        .sort((a, b) => a - b)
+                        .join("-")}`;
+                }
+
+                Echo.leave(channel);
+            });
+        };
+    }, [chats]);
 
     return (
         <>

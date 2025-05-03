@@ -6,20 +6,20 @@ import { Box, Chip, IconButton, Input } from "@mui/joy";
 import List from "@mui/joy/List";
 import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ChatListItem from "../Components/ChatListItem";
-import { toggleMessagesPane } from "../utils/ToggleMessagesPane";
-import { useDispatch, useSelector } from "react-redux";
-import { setChats } from "@/store/chats/chatsSlice";
+import { useSelector } from "react-redux";
+import { usePage } from "@inertiajs/react";
 
-export default function ChatsPane({ selectedChatId, isUserOnline}) {
+export default function ChatsPane({ selectedChatId, isUserOnline }) {
     // console.log("ChatsPane sortedChats: ", sortedChats);
-    const dispatch = useDispatch();
+    const page = usePage();
     const chats = useSelector((state) => state.chats.chats);
+    const user = page.props.auth.user;
     const [localChats, setLocalChats] = useState([]);
     const [sortedChats, setSortedChats] = useState([]);
     // console.log("chats from pane: ", localChats);
 
+    // handle search for chats pane
     const onSearch = (ev) => {
         const search = ev.target.value.toLowerCase();
         setLocalChats(
@@ -55,6 +55,61 @@ export default function ChatsPane({ selectedChatId, isUserOnline}) {
     useEffect(() => {
         setLocalChats(chats);
         return () => {};
+    }, [chats]);
+
+    // create channels for messaging and emit messages
+    useEffect(() => {
+        chats.forEach((chat) => {
+            let channel = `messages.group.${chat.id}`;
+
+            if (chat.is_user) {
+                channel = `messages.user.${[
+                    parseInt(user.id),
+                    parseInt(chat.id),
+                ]
+                    .sort((a, b) => a - b)
+                    .join("-")}`;
+            }
+            // console.log("channel: ", channel);
+
+            Echo.private(channel)
+                .error((error) => {
+                    console.log(error);
+                })
+                .listen(".SocketMessages", (event) => {
+                    console.log("SocketMessages: ", event);
+                    // const message = event.message;
+                    // emit("message.created", message);
+
+                    // if (message.sender_id === user.id) {
+                    //     return;
+                    // }
+
+                    // emit("newMessageNotification", {
+                    //     user: message.sender,
+                    //     groups_id: message.groups_id,
+                    //     message: message.message,
+                    // });
+                });
+        });
+
+        // cleanup of channels
+        return () => {
+            chats.forEach((chat) => {
+                let channel = `messages.group.${chat.id}`;
+
+                if (chat.is_user) {
+                    channel = `messages.user.${[
+                        parseInt(user.id),
+                        parseInt(chat.id),
+                    ]
+                        .sort((a, b) => a - b)
+                        .join("-")}`;
+                }
+
+                Echo.leave(channel);
+            });
+        };
     }, [chats]);
 
     return (

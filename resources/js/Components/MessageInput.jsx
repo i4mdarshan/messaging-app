@@ -20,14 +20,57 @@ import FormatItalicRoundedIcon from "@mui/icons-material/FormatItalicRounded";
 import StrikethroughSRoundedIcon from "@mui/icons-material/StrikethroughSRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import { apiRequest } from "@/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from "@/store/messages/messagesSlice";
+import { updateLastMessage } from "@/store/chats/chatsSlice";
 
-export default function MessageInput({
-    textAreaValue,
-    setTextAreaValue,
-    onSubmit,
-}) {
+export default function MessageInput() {
     const textAreaRef = useRef(null);
+    const dispatch = useDispatch();
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [textAreaValue, setTextAreaValue] = useState("");
+    const chat = useSelector((state) => state.chats.selectedChat);
+    const onSubmit = async () => {
+        if (textAreaValue.trim() === "") {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("message", textAreaValue);
+
+        if (chat.is_user) {
+            formData.append("receiver_id", chat.id);
+        } else if (chat.is_group) {
+            formData.append("groups_id", chat.id);
+        }
+
+        const response = await apiRequest({
+            method: "POST",
+            url: "/send-message",
+            data: formData,
+            useMiddleware: ["auth"],
+        });
+
+        if (response.success) {
+            setTextAreaValue("");
+            dispatch(addMessage(response.data));
+            // console.log("response: ", response.data);
+            // console.log("comparison: ", false === !!response.data.group_id);
+            dispatch(
+                updateLastMessage({
+                    receiverId: response.data.receiver_id,
+                    groupId: response.data.group_id,
+                    lastMessage: response.data.message,
+                    lastMessageDate: response.data.created_at,
+                })
+            );
+
+            // if (messagesEndRef.current) {
+            //     messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+            // }
+        }
+    };
 
     const handleClick = () => {
         if (textAreaValue.trim() !== "") {
