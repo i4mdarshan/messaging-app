@@ -9,8 +9,11 @@ import MessagePaneHelp from "@/Components/MessagePaneHelp";
 import { isObjectEmpty } from "@/utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { setChats, updateLastMessage } from "@/store/chats/chatsSlice";
-import { addEvent, emitEvent } from "@/store/events/eventsSlice";
 import { addMessage } from "@/store/messages/messagesSlice";
+import {
+    leavePresenceChannel,
+    setupPresenceChannel,
+} from "@/socket/SocketManager";
 
 function Chat() {
     const page = usePage();
@@ -19,7 +22,7 @@ function Chat() {
     const user = page.props.auth.user;
     const dispatch = useDispatch();
     const selectedChat = useSelector((state) => state.chats.selectedChat);
-    const [onlineUsers, setOnlineUsers] = useState({});
+    const onlineUsers = useSelector((state) => state.usersPresence.onlineUsers);
     const isUserOnline = (userId) => onlineUsers[userId];
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -29,93 +32,63 @@ function Chat() {
         return () => {};
     }, [chats]);
 
-    // WebSocket enabler
+    // used to manage the socket connections of presence channel
     useEffect(() => {
-        Echo.join("online")
-            .here((users) => {
-                const onlineUsersObj = Object.fromEntries(
-                    users.map((user) => [user.id, user])
-                );
-                setOnlineUsers((prevOnlineUsers) => {
-                    return {
-                        ...prevOnlineUsers,
-                        ...onlineUsersObj,
-                    };
-                });
-            })
-            .joining((user) => {
-                setOnlineUsers((prevOnlineUsers) => {
-                    const updatedUsers = { ...prevOnlineUsers };
-                    updatedUsers[user.id] = user;
-                    return updatedUsers;
-                });
-            })
-            .leaving((user) => {
-                setOnlineUsers((prevOnlineUsers) => {
-                    const updatedUsers = { ...prevOnlineUsers };
-                    updatedUsers[user.id] = user;
-                    return updatedUsers;
-                });
-            })
-            .error((error) => {
-                console.error("error", error);
-            });
-
+        setupPresenceChannel();
         return () => {
-            Echo.leave("online");
+            leavePresenceChannel();
         };
     }, []);
 
     // create channels for messaging and emit messages
-    useEffect(() => {
-        chats.forEach((chat) => {
-            let channel = `messages.group.${chat.id}`;
+    // useEffect(() => {
+    //     chats.forEach((chat) => {
+    //         let channel = `messages.group.${chat.id}`;
 
-            if (chat.is_user) {
-                channel = `messages.user.${[
-                    parseInt(user.id),
-                    parseInt(chat.id),
-                ]
-                    .sort((a, b) => a - b)
-                    .join("-")}`;
-            }
-            // console.log("channel: ", channel);
+    //         if (chat.is_user) {
+    //             channel = `messages.user.${[
+    //                 parseInt(user.id),
+    //                 parseInt(chat.id),
+    //             ]
+    //                 .sort((a, b) => a - b)
+    //                 .join("-")}`;
+    //         }
+    //         // console.log("channel: ", channel);
 
-            Echo.private(channel)
-                .error((error) => {
-                    console.log(error);
-                })
-                .listen("SocketMessages", (event) => {
-                    // console.log("SocketMessages: ", event);
-                    const message = event.message;
+    //         Echo.private(channel)
+    //             .error((error) => {
+    //                 console.log(error);
+    //             })
+    //             .listen("SocketMessages", (event) => {
+    //                 // console.log("SocketMessages: ", event);
+    //                 const message = event.message;
 
-                    // if (message.sender_id === user.id) {
-                    //     return;
-                    // }
+    //                 // if (message.sender_id === user.id) {
+    //                 //     return;
+    //                 // }
 
-                    // dispatch(addMessage(message));
+    //                 // dispatch(addMessage(message));
+    //             });
+    //     });
 
-                });
-        });
+    //     // cleanup of channels
+    //     return () => {
+    //         chats.forEach((chat) => {
+    //             let channel = `messages.group.${chat.id}`;
 
-        // cleanup of channels
-        return () => {
-            chats.forEach((chat) => {
-                let channel = `messages.group.${chat.id}`;
+    //             if (chat.is_user) {
+    //                 channel = `messages.user.${[
+    //                     parseInt(user.id),
+    //                     parseInt(chat.id),
+    //                 ]
+    //                     .sort((a, b) => a - b)
+    //                     .join("-")}`;
+    //             }
 
-                if (chat.is_user) {
-                    channel = `messages.user.${[
-                        parseInt(user.id),
-                        parseInt(chat.id),
-                    ]
-                        .sort((a, b) => a - b)
-                        .join("-")}`;
-                }
-
-                Echo.leave(channel);
-            });
-        };
-    }, [chats]);
+    //             Echo.leave(channel);
+    //         });
+    //     };
+    // }, [chats]);
 
     return (
         <>
