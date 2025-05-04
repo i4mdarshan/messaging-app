@@ -20,7 +20,9 @@ const chatsSlice = createSlice({
             const { receiverId, lastMessage, lastMessageDate, groupId } =
                 action.payload;
             const chat = state.chats.find(
-                (c) => c.id === parseInt(receiverId) || (c.id === parseInt(groupId) && c.is_group === !!groupId)
+                (c) =>
+                    c.id === parseInt(receiverId) ||
+                    (c.id === parseInt(groupId) && c.is_group === !!groupId)
             );
             if (chat) {
                 chat.last_message = lastMessage;

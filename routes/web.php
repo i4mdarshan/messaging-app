@@ -6,7 +6,6 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MessagesController;
 
-// Broadcast::routes(['middleware' => ['auth']]);
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),

@@ -55,17 +55,6 @@ export default function MessageInput() {
 
         if (response.success) {
             setTextAreaValue("");
-            dispatch(addMessage(response.data));
-            // console.log("response: ", response.data);
-            // console.log("comparison: ", false === !!response.data.group_id);
-            dispatch(
-                updateLastMessage({
-                    receiverId: response.data.receiver_id,
-                    groupId: response.data.group_id,
-                    lastMessage: response.data.message,
-                    lastMessageDate: response.data.created_at,
-                })
-            );
 
             // if (messagesEndRef.current) {
             //     messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
@@ -87,32 +76,6 @@ export default function MessageInput() {
         }
     };
 
-    // const messageCreated = (message) => {
-    //     if (chat && chat.is_group && chat.id === message.groups_id) {
-    //         dispatch(addMessage(message));
-    //     }
-
-    //     if (
-    //         chat &&
-    //         chat.is_user &&
-    //         (chat.id == message.sender_id || chat.id == message.receiver_id)
-    //     ) {
-    //         dispatch(addMessage(message));
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     let addEventData = {
-    //         name: "message.created",
-    //         cb: messageCreated,
-    //     };
-
-    //     dispatch(addEvent(addEventData));
-
-    //     return () => {
-    //         // offCreated();
-    //     };
-    // }, [chat]);
 
     return (
         <Sheet

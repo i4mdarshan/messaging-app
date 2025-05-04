@@ -85,9 +85,7 @@ export default function MessagesPane() {
                 </Stack>
                 {/* <div ref={messagesEndRef} /> */}
             </Box>
-            <MessageInput
-                sx={{ flexShrink: 0 }}
-            />
+            <MessageInput sx={{ flexShrink: 0 }} />
         </Sheet>
     );
 }

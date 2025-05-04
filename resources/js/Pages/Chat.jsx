@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChats, updateLastMessage } from "@/store/chats/chatsSlice";
 import { addMessage } from "@/store/messages/messagesSlice";
 import {
+    initializeMessageChannels,
+    leaveAllMessageChannels,
     leavePresenceChannel,
     setupPresenceChannel,
 } from "@/socket/SocketManager";
@@ -39,6 +41,57 @@ function Chat() {
             leavePresenceChannel();
         };
     }, []);
+    const joinedChannels = new Set();
+    // used to manage the sending and reciveing of messages event
+    useEffect(() => {
+        if (chats && user?.id) {
+            // initializeMessageChannels(chats, user.id);
+            const userId = user.id;
+            if (Array.isArray(chats) || chats.length !== 0) {
+                chats.forEach((chat) => {
+                    const channel = chat.is_user
+                        ? `messages.user.${[userId, chat.id]
+                              .sort((a, b) => a - b)
+                              .join("-")}`
+                        : `messages.group.${chat.id}`;
+                    // console.log(`Channel Name created ${chat.name}`, channel);
+
+                    if (joinedChannels.has(channel)) return;
+
+                    Echo.private(channel)
+                        .listen("SocketMessages", (event) => {
+                            const { message } = event;
+                            console.log("Socket message: ", message);
+
+                            dispatch(addMessage(message));
+                            dispatch(
+                                updateLastMessage({
+                                    receiverId: message.receiver_id,
+                                    groupId: message.group_id,
+                                    lastMessage: message.message,
+                                    lastMessageDate: message.created_at,
+                                })
+                            );
+                        })
+                        .error((err) => {
+                            console.error(
+                                `[Socket Error] Channel: ${channel}`,
+                                err
+                            );
+                        });
+
+                    joinedChannels.add(channel);
+                });
+            }
+        }
+
+        return () => {
+            // leaveAllMessageChannels(); // clean up on unmount
+
+            joinedChannels.forEach((channel) => Echo.leave(channel));
+            joinedChannels.clear();
+        };
+    }, [chats, user?.id]);
 
     // create channels for messaging and emit messages
     // useEffect(() => {
