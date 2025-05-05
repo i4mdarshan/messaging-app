@@ -71,6 +71,7 @@ class Groups extends Model
     {
         return [
             'id' => $this->id,
+            'public_uid' => $this->public_uid,
             'name' => $this->name,
             'username' => $this->name,
             'is_group' => true, //since this is a Group

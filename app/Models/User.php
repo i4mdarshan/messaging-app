@@ -96,6 +96,7 @@ class User extends Authenticatable
     {
         return [
             'id' => $this->id,
+            'public_uid' => $this->public_uid,
             'name' => $this->name,
             'username' => $this->username,
             'avatar_url' => $this->avatar,

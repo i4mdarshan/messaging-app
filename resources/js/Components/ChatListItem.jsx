@@ -13,11 +13,12 @@ import { setMessages } from "@/store/messages/messagesSlice";
 import { selectChat } from "@/store/chats/chatsSlice";
 import { addEvent } from "@/store/events/eventsSlice";
 
-export default function ChatListItem({ chat, online, selectedChatId }) {
+export default function ChatListItem({ chat, online }) {
     const dispatch = useDispatch();
     const {
         id,
         name,
+        public_uid,
         is_user,
         username,
         avatar_url,
@@ -30,8 +31,7 @@ export default function ChatListItem({ chat, online, selectedChatId }) {
         last_message_date,
     } = chat;
     const selectedChat = useSelector((state) => state.chats.selectedChat);
-    const typePrefix = chat.is_group ? "group_" : "user_";
-    const selected = selectedChatId === `${typePrefix}${chat.id}`;
+    const selected = chat.public_uid === selectedChat.public_uid;
     const fetchMessages = async () => {
         const response = await apiRequest({
             method: "POST",

@@ -10,7 +10,7 @@ import ChatListItem from "../Components/ChatListItem";
 import { useSelector } from "react-redux";
 import { usePage } from "@inertiajs/react";
 
-export default function ChatsPane({ selectedChatId, isUserOnline }) {
+export default function ChatsPane({ isUserOnline }) {
     // console.log("ChatsPane sortedChats: ", sortedChats);
     const page = usePage();
     const chats = useSelector((state) => state.chats.chats);
@@ -161,11 +161,8 @@ export default function ChatsPane({ selectedChatId, isUserOnline }) {
                     >
                         {sortedChats.map((chat) => (
                             <ChatListItem
-                                key={`${chat.is_group ? "group_" : "user_"}${
-                                    chat.id
-                                }`}
+                                key={chat.public_uid}
                                 chat={chat}
-                                selectedChatId={selectedChatId}
                                 online={!!isUserOnline(chat.id)}
                             />
                         ))}

@@ -9,6 +9,7 @@ use App\Models\Groups;
 use Carbon\Carbon;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,23 +34,23 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
 
-        for ($i=0; $i < 5; $i++) { 
+        for ($i = 0; $i < 5; $i++) {
             $group = Groups::factory()->create([
                 'owner_id' => 1,
             ]);
 
-            $users = User::inRandomOrder()->limit(rand(2,5))->pluck('id');
-            $group->users()->attach(array_unique([1,...$users]));
+            $users = User::inRandomOrder()->limit(rand(2, 5))->pluck('id');
+            $group->users()->attach(array_unique([1, ...$users]));
         }
 
         Messages::factory(1000)->create();
         $messages = Messages::whereNull('groups_id')->orderBy('created_at')->get();
 
         // last message id for groups is not getting populated
-        $chats = $messages->groupBy(function($message){
+        $chats = $messages->groupBy(function ($message) {
             return collect([$message->sender_id, $message->receiver_id])
-            ->sort()->implode('_');
-        })->map(function($groupedMessages){
+                ->sort()->implode('_');
+        })->map(function ($groupedMessages) {
             return [
                 'sender_id' => $groupedMessages->first()->sender_id,
                 'receiver_id' => $groupedMessages->first()->receiver_id,
@@ -59,6 +60,13 @@ class DatabaseSeeder extends Seeder
             ];
         })->values();
 
-        Chats::insertOrIgnore($chats->toArray());
+        // Chats::insertOrIgnore($chats->toArray());
+        User::whereNull('public_uid')->each(function ($user) {
+            $user->update(['public_uid' => Str::uuid()]);
+        });
+
+        Groups::whereNull('public_uid')->each(function ($group) {
+            $group->update(['public_uid' => Str::uuid()]);
+        });
     }
 }

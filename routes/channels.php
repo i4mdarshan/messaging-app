@@ -9,7 +9,7 @@ Broadcast::channel('online', function (User $user) {
 });
 
 Broadcast::channel('messages.user.{senderId}-{receiverId}', function (User $user, int $senderId, $receiverId) {
-    return $user->id === $senderId || $user->id === $receiverId ? $user : null;
+    return $user->id === (int) $senderId || $user->id === (int) $receiverId ? $user : null;
 });
 
 Broadcast::channel('messages.group.{groupId}', function (User $user, int $groupId) {

@@ -61,7 +61,7 @@ function Chat() {
                     Echo.private(channel)
                         .listen("SocketMessages", (event) => {
                             const { message } = event;
-                            console.log("Socket message: ", message);
+                            // console.log("Socket message: ", message);
 
                             dispatch(addMessage(message));
                             dispatch(
@@ -193,16 +193,7 @@ function Chat() {
                                         : 1,
                                 }}
                             >
-                                <ChatsPane
-                                    // below prop is used only for UI purpose
-                                    selectedChatId={`${
-                                        !isObjectEmpty(selectedChat) &&
-                                        selectedChat.is_group
-                                            ? "group_"
-                                            : "user_"
-                                    }${selectedChat.id}`}
-                                    isUserOnline={isUserOnline}
-                                />
+                                <ChatsPane isUserOnline={isUserOnline} />
                             </Sheet>
 
                             {isMobile ? (
